@@ -1,1 +1,2 @@
+- Improve response codes and error handling for User and Creature CRUD
 - Check ValidationPipe (https://docs.nestjs.com/techniques/validation#stripping-properties) for stripping properties

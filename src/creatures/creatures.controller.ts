@@ -7,8 +7,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateCreatureDto, UpdateCreatureDto } from './dto';
 import { CreaturesService } from './creatures.service';
+import { CreateCreatureDto, UpdateCreatureDto } from './dto';
 
 @Controller('creatures')
 export class CreaturesController {
@@ -16,29 +16,29 @@ export class CreaturesController {
 
   @Post()
   async create(@Body() createCreatureDto: CreateCreatureDto) {
-    this.creaturesService.create(createCreatureDto);
+    return this.creaturesService.create(createCreatureDto);
   }
 
   @Get()
   async findAll() {
-    this.creaturesService.findAll();
+    return this.creaturesService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return `This action returns a #${id} creature`;
+  async findOne(@Param('id') id: number) {
+    return this.creaturesService.findOne(id);
   }
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateCreatureDto: UpdateCreatureDto,
   ) {
-    return `This action updates a #${id} creature`;
+    return this.creaturesService.update(id, updateCreatureDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `This action removes a #${id} creature`;
+  remove(@Param('id') id: number) {
+    return this.creaturesService.delete(id);
   }
 }

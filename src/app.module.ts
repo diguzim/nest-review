@@ -6,11 +6,11 @@ import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
+import { Creature } from './creatures/creature.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
-    CreaturesModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -18,10 +18,11 @@ import { UsersModule } from './users/users.module';
       username: 'user',
       password: 'password',
       database: 'nest-review',
-      entities: [User],
+      entities: [User, Creature],
       synchronize: true,
     }),
     UsersModule,
+    CreaturesModule,
   ],
 })
 export class AppModule implements NestModule {
