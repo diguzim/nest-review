@@ -1,0 +1,1 @@
+- Check ValidationPipe (https://docs.nestjs.com/techniques/validation#stripping-properties) for stripping properties

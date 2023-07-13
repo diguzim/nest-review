@@ -8,21 +8,24 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateCreatureDto, UpdateCreatureDto } from './dto';
+import { CreaturesService } from './creatures.service';
 
 @Controller('creatures')
 export class CreaturesController {
+  constructor(private readonly creaturesService: CreaturesService) {}
+
   @Post()
-  async create(@Body() createCreatureDto: CreateCreatureDto): Promise<string> {
-    return 'This action adds a new creature';
+  async create(@Body() createCreatureDto: CreateCreatureDto) {
+    this.creaturesService.create(createCreatureDto);
   }
 
   @Get()
-  async findAll(): Promise<string> {
-    return 'This action returns all creatures';
+  async findAll() {
+    this.creaturesService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<string> {
+  async findOne(@Param('id') id: string) {
     return `This action returns a #${id} creature`;
   }
 
