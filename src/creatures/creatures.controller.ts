@@ -5,6 +5,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -26,7 +27,7 @@ export class CreaturesController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     const creature = await this.creaturesService.findOne(id);
 
     if (!creature) {
@@ -38,7 +39,7 @@ export class CreaturesController {
 
   @Put(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateCreatureDto: UpdateCreatureDto,
   ) {
     const creature = await this.creaturesService.update(id, updateCreatureDto);
@@ -51,7 +52,7 @@ export class CreaturesController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number) {
     const creature = await this.creaturesService.delete(id);
 
     if (creature.affected === 0) {
