@@ -28,16 +28,20 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
     const user = await this.usersRepository.findOneBy({ id });
+
     if (!user) {
       return null;
     }
+
     user.name = updateUserDto.name;
     user.email = updateUserDto.email;
+
     await this.usersRepository.save(user);
+
     return user;
   }
 
-  async delete(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+  async delete(id: number) {
+    return await this.usersRepository.delete(id);
   }
 }
