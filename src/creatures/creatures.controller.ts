@@ -8,6 +8,8 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreaturesService } from './creatures.service';
 import { CreateCreatureDto, UpdateCreatureDto } from './dto';
@@ -17,6 +19,7 @@ export class CreaturesController {
   constructor(private readonly creaturesService: CreaturesService) {}
 
   @Post()
+  @UsePipes(ValidationPipe)
   async create(@Body() createCreatureDto: CreateCreatureDto) {
     return this.creaturesService.create(createCreatureDto);
   }
@@ -38,6 +41,7 @@ export class CreaturesController {
   }
 
   @Put(':id')
+  @UsePipes(ValidationPipe)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCreatureDto: UpdateCreatureDto,
