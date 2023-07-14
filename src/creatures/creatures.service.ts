@@ -38,7 +38,7 @@ export class CreaturesService {
     return creature;
   }
 
-  async delete(id: number): Promise<void> {
-    await this.creaturesRepository.delete(id);
+  async delete(id: number) {
+    return await this.creaturesRepository.delete(id);
   }
 }

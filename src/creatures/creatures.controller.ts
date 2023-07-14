@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -26,19 +27,37 @@ export class CreaturesController {
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.creaturesService.findOne(id);
+    const creature = await this.creaturesService.findOne(id);
+
+    if (!creature) {
+      throw new NotFoundException();
+    }
+
+    return creature;
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: number,
     @Body() updateCreatureDto: UpdateCreatureDto,
   ) {
-    return this.creaturesService.update(id, updateCreatureDto);
+    const creature = await this.creaturesService.update(id, updateCreatureDto);
+
+    if (!creature) {
+      throw new NotFoundException();
+    }
+
+    return creature;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.creaturesService.delete(id);
+  async remove(@Param('id') id: number) {
+    const creature = await this.creaturesService.delete(id);
+
+    if (creature.affected === 0) {
+      throw new NotFoundException();
+    }
+
+    return 'Successfully deleted';
   }
 }
