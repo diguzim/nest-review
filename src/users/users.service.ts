@@ -24,6 +24,10 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id });
   }
 
+  findOneBy(options: any): Promise<User | null> {
+    return this.usersRepository.findOneBy(options);
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
     const user = await this.usersRepository.findOneBy({ id });
 
