@@ -19,7 +19,7 @@ import { Creature } from './creatures/creature.entity';
       password: 'password',
       database: 'nest-review',
       entities: [User, Creature],
-      synchronize: true,
+      synchronize: true, //TODO Change this on production
     }),
     UsersModule,
     CreaturesModule,

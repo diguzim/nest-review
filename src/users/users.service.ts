@@ -12,9 +12,7 @@ export class UsersService {
   ) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {
-    const user = new User();
-    user.name = createUserDto.name;
-    user.email = createUserDto.email;
+    const user = this.buildUserEntity(createUserDto);
     return this.usersRepository.save(user);
   }
 
@@ -33,8 +31,7 @@ export class UsersService {
       return null;
     }
 
-    user.name = updateUserDto.name;
-    user.email = updateUserDto.email;
+    this.updateUserEntity(user, updateUserDto);
 
     await this.usersRepository.save(user);
 
@@ -43,5 +40,19 @@ export class UsersService {
 
   async delete(id: number) {
     return await this.usersRepository.delete(id);
+  }
+
+  private buildUserEntity(userDto: CreateUserDto): User {
+    const user = new User();
+    user.name = userDto.name;
+    user.email = userDto.email;
+    user.password = userDto.password;
+    return user;
+  }
+
+  private updateUserEntity(user: User, userDto: UpdateUserDto) {
+    user.name = userDto.name;
+    user.email = userDto.email;
+    user.password = userDto.password;
   }
 }
