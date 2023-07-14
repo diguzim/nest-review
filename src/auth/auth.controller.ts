@@ -11,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto';
 import { AuthGuard } from './auth.guard';
+import { Public } from 'src/decorators';
 
 interface AuthenticatedRequest extends Request {
   user: any;
@@ -20,6 +21,7 @@ interface AuthenticatedRequest extends Request {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
   signIn(@Body() signInDto: SignInDto) {

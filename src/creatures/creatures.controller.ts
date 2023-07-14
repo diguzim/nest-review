@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { CreaturesService } from './creatures.service';
 import { CreateCreatureDto, UpdateCreatureDto } from './dto';
+import { Public } from 'src/decorators';
 
 @Controller('creatures')
 export class CreaturesController {
@@ -24,11 +25,13 @@ export class CreaturesController {
     return this.creaturesService.create(createCreatureDto);
   }
 
+  @Public()
   @Get()
   async findAll() {
     return this.creaturesService.findAll();
   }
 
+  @Public()
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const creature = await this.creaturesService.findOne(id);

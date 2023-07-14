@@ -13,22 +13,26 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { Public } from 'src/decorators';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Public()
   @Post()
   @UsePipes(ValidationPipe)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
+  @Public()
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findOne(id);
