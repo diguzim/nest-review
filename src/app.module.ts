@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { CreaturesModule } from './creatures/creatures.module';
 import { LoggerMiddleware } from './common/middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,6 +13,7 @@ import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 import { Creature } from './creatures/creature.entity';
 import { AuthModule } from './auth/auth.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -33,6 +39,12 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     CreaturesModule,
     AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
   ],
 })
 export class AppModule implements NestModule {
