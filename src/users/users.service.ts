@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -11,8 +12,8 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.buildUserEntity(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = await this.buildUserEntity(createUserDto);
     return this.usersRepository.save(user);
   }
 
@@ -46,17 +47,25 @@ export class UsersService {
     return await this.usersRepository.delete(id);
   }
 
-  private buildUserEntity(userDto: CreateUserDto): User {
+  private async buildUserEntity(userDto: CreateUserDto) {
     const user = new User();
     user.name = userDto.name;
     user.email = userDto.email;
-    user.password = userDto.password;
+    user.password_hash = await this.hashPassword(userDto.password);
     return user;
   }
 
   private updateUserEntity(user: User, userDto: UpdateUserDto) {
     user.name = userDto.name;
     user.email = userDto.email;
-    user.password = userDto.password;
+    user.password_hash = userDto.password;
+  }
+
+  private async hashPassword(password: string) {
+    const salt = await bcrypt.genSalt();
+
+    const hash = await bcrypt.hash(password, salt);
+
+    return hash;
   }
 }
