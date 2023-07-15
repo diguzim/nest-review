@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto';
 import { AuthGuard } from './auth.guard';
-import { Public } from 'src/decorators';
+import { Public } from '../decorators';
 
 interface AuthenticatedRequest extends Request {
   user: any;

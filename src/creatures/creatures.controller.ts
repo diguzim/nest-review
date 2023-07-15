@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { CreaturesService } from './creatures.service';
 import { CreateCreatureDto, UpdateCreatureDto } from './dto';
-import { Public } from 'src/decorators';
+import { Public } from '../decorators';
 
 @Controller('creatures')
 export class CreaturesController {
