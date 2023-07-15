@@ -3,10 +3,13 @@ import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 describe('UsersService', () => {
   let service: UsersService;
   let userRepository: Repository<User>;
+  let hashSpy: jest.SpyInstance;
+  let genSaltSpy: jest.SpyInstance;
 
   const USER_REPOSITORY_TOKEN = getRepositoryToken(User);
 
@@ -37,6 +40,13 @@ describe('UsersService', () => {
 
     service = module.get<UsersService>(UsersService);
     userRepository = module.get<Repository<User>>(USER_REPOSITORY_TOKEN);
+
+    hashSpy = jest.spyOn(bcrypt, 'hash');
+    genSaltSpy = jest.spyOn(bcrypt, 'genSalt');
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('should be defined', () => {
@@ -47,9 +57,10 @@ describe('UsersService', () => {
   describe('create', () => {
     it("should save a user with it's password hashed using the user repository", async () => {
       const mockedPasswordHash = 'password_hashed';
-      jest
-        .spyOn(service as any, 'hashPassword')
-        .mockResolvedValue(mockedPasswordHash);
+      hashSpy.mockResolvedValue(mockedPasswordHash);
+      genSaltSpy.mockResolvedValue('mockedSalt');
+
+      jest.spyOn(service as any, 'hashPassword');
 
       const createUserDto = {
         name: 'John Doe',
@@ -118,13 +129,13 @@ describe('UsersService', () => {
 
     describe('when the user exists', () => {
       it("should update user with it's password hashed using the user repository", async () => {
-        const mockedNewPasswordHash = 'new_password_hashed';
+        const mockedPasswordHash = 'password_hashed';
+        hashSpy.mockResolvedValue(mockedPasswordHash);
+        genSaltSpy.mockResolvedValue('mockedSalt');
 
         jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(mockedUser);
 
-        jest
-          .spyOn(service as any, 'hashPassword')
-          .mockResolvedValue(mockedNewPasswordHash);
+        jest.spyOn(service as any, 'hashPassword');
 
         const user = await service.update(user_id, updateUserDto);
 
@@ -136,7 +147,7 @@ describe('UsersService', () => {
           id: user_id,
           name: updateUserDto.name,
           email: updateUserDto.email,
-          password_hash: mockedNewPasswordHash,
+          password_hash: mockedPasswordHash,
         });
 
         expect(user).toEqual(mockedUser);
