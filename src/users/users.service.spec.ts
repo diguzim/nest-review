@@ -28,7 +28,6 @@ describe('UsersService', () => {
         {
           provide: USER_REPOSITORY_TOKEN,
           useValue: {
-            create: jest.fn(),
             save: jest.fn((user) => user),
             find: jest.fn(),
             findOneBy: jest.fn(),

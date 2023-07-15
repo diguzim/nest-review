@@ -29,12 +29,14 @@ export class CreaturesService {
     id: number,
     updateCreatureDto: UpdateCreatureDto,
   ): Promise<Creature | null> {
-    const creature = await this.creaturesRepository.findOneBy({ id });
+    let creature = await this.creaturesRepository.findOneBy({ id });
+
     if (!creature) {
       return null;
     }
+
     creature.name = updateCreatureDto.name;
-    await this.creaturesRepository.save(creature);
+    creature = await this.creaturesRepository.save(creature);
     return creature;
   }
 
