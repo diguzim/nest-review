@@ -30,15 +30,15 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
-    const user = await this.usersRepository.findOneBy({ id });
+    let user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
       return null;
     }
 
-    this.updateUserEntity(user, updateUserDto);
+    await this.updateUserEntity(user, updateUserDto);
 
-    await this.usersRepository.save(user);
+    user = await this.usersRepository.save(user);
 
     return user;
   }
@@ -55,10 +55,10 @@ export class UsersService {
     return user;
   }
 
-  private updateUserEntity(user: User, userDto: UpdateUserDto) {
+  private async updateUserEntity(user: User, userDto: UpdateUserDto) {
     user.name = userDto.name;
     user.email = userDto.email;
-    user.password_hash = userDto.password;
+    user.password_hash = await this.hashPassword(userDto.password);
   }
 
   private async hashPassword(password: string) {

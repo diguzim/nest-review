@@ -10,6 +10,14 @@ describe('UsersService', () => {
 
   const USER_REPOSITORY_TOKEN = getRepositoryToken(User);
 
+  const user_id = 1;
+  const mockedUser = {
+    id: user_id,
+    name: 'John Doe',
+    email: 'email@example.com',
+    password_hash: 'password_hashed',
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -18,7 +26,7 @@ describe('UsersService', () => {
           provide: USER_REPOSITORY_TOKEN,
           useValue: {
             create: jest.fn(),
-            save: jest.fn(),
+            save: jest.fn((user) => user),
             find: jest.fn(),
             findOneBy: jest.fn(),
             delete: jest.fn(),
@@ -33,9 +41,6 @@ describe('UsersService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('userRepository should be defined', () => {
     expect(userRepository).toBeDefined();
   });
 
@@ -53,11 +58,111 @@ describe('UsersService', () => {
       };
       await service.create(createUserDto);
 
+      expect(service['hashPassword']).toHaveBeenCalledWith(
+        createUserDto.password,
+      );
+
       expect(userRepository.save).toHaveBeenCalledWith({
         name: createUserDto.name,
         email: createUserDto.email,
         password_hash: mockedPasswordHash,
       });
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return all users using the user repository', async () => {
+      const mockedUsers = [mockedUser];
+
+      jest.spyOn(userRepository, 'find').mockResolvedValue(mockedUsers);
+
+      const users = await service.findAll();
+
+      expect(users).toEqual(mockedUsers);
+
+      expect(userRepository.find).toHaveBeenCalled();
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return user using the user repository', async () => {
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(mockedUser);
+
+      const user = await service.findOne(user_id);
+
+      expect(user).toEqual(mockedUser);
+
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: user_id });
+    });
+  });
+
+  describe('findOneBy', () => {
+    it('should return user using the user repository', async () => {
+      const options = { email: 'email@example.com' };
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(mockedUser);
+
+      const user = await service.findOneBy(options);
+
+      expect(user).toEqual(mockedUser);
+
+      expect(userRepository.findOneBy).toHaveBeenCalledWith(options);
+    });
+  });
+
+  describe('update', () => {
+    const updateUserDto = {
+      name: 'John Doe',
+      email: 'email@example.com',
+      password: 'password',
+    };
+
+    describe('when the user exists', () => {
+      it("should update user with it's password hashed using the user repository", async () => {
+        const mockedNewPasswordHash = 'new_password_hashed';
+
+        jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(mockedUser);
+
+        jest
+          .spyOn(service as any, 'hashPassword')
+          .mockResolvedValue(mockedNewPasswordHash);
+
+        const user = await service.update(user_id, updateUserDto);
+
+        expect(service['hashPassword']).toHaveBeenCalledWith(
+          updateUserDto.password,
+        );
+
+        expect(userRepository.save).toHaveBeenCalledWith({
+          id: user_id,
+          name: updateUserDto.name,
+          email: updateUserDto.email,
+          password_hash: mockedNewPasswordHash,
+        });
+
+        expect(user).toEqual(mockedUser);
+      });
+    });
+
+    describe('when the user does not exist', () => {
+      it('should return null', async () => {
+        jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(null);
+
+        const user = await service.update(user_id, updateUserDto);
+
+        expect(user).toEqual(null);
+
+        expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: user_id });
+      });
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete user using the user repository', async () => {
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(mockedUser);
+
+      await service.delete(user_id);
+
+      expect(userRepository.delete).toHaveBeenCalledWith(user_id);
     });
   });
 });
