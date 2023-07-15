@@ -39,7 +39,6 @@ describe('UsersService', () => {
 
     service = module.get<UsersService>(UsersService);
     userRepository = module.get<Repository<User>>(USER_REPOSITORY_TOKEN);
-
     hashSpy = jest.spyOn(bcrypt, 'hash');
     genSaltSpy = jest.spyOn(bcrypt, 'genSalt');
   });

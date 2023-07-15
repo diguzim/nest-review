@@ -108,7 +108,7 @@ describe('CreaturesService', () => {
     });
 
     describe('when the creature does not exist', () => {
-      it('should throw a NotFoundException', async () => {
+      it('should return null', async () => {
         jest.spyOn(creatureRepository, 'findOneBy').mockResolvedValue(null);
 
         const creature = await service.update(creature_id, updateCreatureDto);
