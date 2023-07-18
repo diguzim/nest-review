@@ -67,6 +67,7 @@ describe('AuthService', () => {
         name: 'John Doe',
         email,
         password_hash: 'hashedPassword',
+        creatures: [],
       };
 
       beforeEach(() => {

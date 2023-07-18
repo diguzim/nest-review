@@ -1,0 +1,2 @@
+- Create many to many relation between creature and items (aka drop table)
+- Configure GraphQL
