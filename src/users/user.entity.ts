@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Creature } from '../creatures/creature.entity';
+import { Item } from '../items/item.entity';
 
 @Entity()
 export class User {
@@ -20,4 +21,8 @@ export class User {
   @OneToMany(() => Creature, (creature) => creature.user)
   @Exclude()
   creatures: Creature[];
+
+  @OneToMany(() => Item, (item) => item.user)
+  @Exclude()
+  items: Item[];
 }

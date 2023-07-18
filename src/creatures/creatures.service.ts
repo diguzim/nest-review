@@ -42,7 +42,7 @@ export class CreaturesService {
     return creature;
   }
 
-  async delete(id: number) {
-    return await this.creaturesRepository.delete(id);
+  delete(id: number) {
+    return this.creaturesRepository.delete(id);
   }
 }

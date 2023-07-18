@@ -7,10 +7,10 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Put,
   UsePipes,
   Request,
   ValidationPipe,
+  Patch,
 } from '@nestjs/common';
 import { CreaturesService } from './creatures.service';
 import { CreateCreatureDto, UpdateCreatureDto } from './dto';
@@ -30,14 +30,14 @@ export class CreaturesController {
     return this.creaturesService.create(createCreatureDto, req.user);
   }
 
-  @Public()
   @Get()
+  @Public()
   async findAll() {
     return this.creaturesService.findAll();
   }
 
-  @Public()
   @Get(':id')
+  @Public()
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const creature = await this.creaturesService.findOne(id);
 
@@ -48,7 +48,7 @@ export class CreaturesController {
     return creature;
   }
 
-  @Put(':id')
+  @Patch(':id')
   @UsePipes(ValidationPipe)
   async update(
     @Param('id', ParseIntPipe) id: number,

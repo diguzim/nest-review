@@ -7,7 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Put,
+  Patch,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,21 +19,21 @@ import { Public } from '../decorators';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Public()
   @Post()
+  @Public()
   @UsePipes(ValidationPipe)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
-  @Public()
   @Get()
+  @Public()
   findAll() {
     return this.usersService.findAll();
   }
 
-  @Public()
   @Get(':id')
+  @Public()
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findOne(id);
 
@@ -44,7 +44,7 @@ export class UsersController {
     return user;
   }
 
-  @Put(':id')
+  @Patch(':id')
   @UsePipes(ValidationPipe)
   async update(
     @Param('id', ParseIntPipe) id: number,

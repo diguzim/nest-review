@@ -43,8 +43,8 @@ export class UsersService {
     return user;
   }
 
-  async delete(id: number) {
-    return await this.usersRepository.delete(id);
+  delete(id: number) {
+    return this.usersRepository.delete(id);
   }
 
   private async buildUserEntity(userDto: CreateUserDto) {

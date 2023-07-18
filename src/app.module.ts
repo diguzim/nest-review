@@ -14,6 +14,8 @@ import { UsersModule } from './users/users.module';
 import { Creature } from './creatures/creature.entity';
 import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ItemsModule } from './items/items.module';
+import { Item } from './items/item.entity';
 
 @Module({
   imports: [
@@ -31,7 +33,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User, Creature],
+        entities: [User, Creature, Item],
         synchronize: true, //TODO Change this on production
       }),
       inject: [ConfigService],
@@ -39,6 +41,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     UsersModule,
     CreaturesModule,
     AuthModule,
+    ItemsModule,
   ],
   providers: [
     {

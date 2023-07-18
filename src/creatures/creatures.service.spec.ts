@@ -3,6 +3,7 @@ import { CreaturesService } from './creatures.service';
 import { Repository } from 'typeorm';
 import { Creature } from './creature.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { mockedUser } from '../common/test/mocked-entities';
 
 describe('CreaturesService', () => {
   let service: CreaturesService;
@@ -10,19 +11,11 @@ describe('CreaturesService', () => {
 
   const CREATURE_REPOSITORY_TOKEN = getRepositoryToken(Creature);
 
-  const user = {
-    id: 1,
-    name: 'John Doe',
-    email: 'email@example.com',
-    password_hash: 'password_hash',
-    creatures: [],
-  };
-
   const creature_id = 1;
   const mockedCreature = {
     id: creature_id,
     name: 'Orc',
-    user: user,
+    user: mockedUser,
   };
 
   beforeEach(async () => {
@@ -53,10 +46,10 @@ describe('CreaturesService', () => {
   });
 
   describe('create', () => {
-    const createCreatureDto = { name: mockedCreature.name, user: user };
+    const createCreatureDto = { name: mockedCreature.name, user: mockedUser };
 
     it('should save a creature using the creature repository', async () => {
-      await service.create(createCreatureDto, user);
+      await service.create(createCreatureDto, mockedUser);
 
       expect(creatureRepository.save).toHaveBeenCalledWith(createCreatureDto);
     });
