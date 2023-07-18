@@ -13,9 +13,10 @@ import { AuthService } from './auth.service';
 import { SignInDto } from './dto';
 import { AuthGuard } from './auth.guard';
 import { Public } from '../decorators';
+import { User } from '../users/user.entity';
 
-interface AuthenticatedRequest extends Request {
-  user: any;
+export interface AuthenticatedRequest extends Request {
+  user: User;
 }
 
 @Controller('auth')

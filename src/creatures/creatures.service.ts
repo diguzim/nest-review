@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Creature } from './creature.entity';
 import { Repository } from 'typeorm';
 import { CreateCreatureDto, UpdateCreatureDto } from './dto';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class CreaturesService {
@@ -11,9 +12,10 @@ export class CreaturesService {
     private creaturesRepository: Repository<Creature>,
   ) {}
 
-  async create(createCreatureDto: CreateCreatureDto) {
+  async create(createCreatureDto: CreateCreatureDto, user: User) {
     const creature = new Creature();
     creature.name = createCreatureDto.name;
+    creature.user = user;
     return this.creaturesRepository.save(creature);
   }
 

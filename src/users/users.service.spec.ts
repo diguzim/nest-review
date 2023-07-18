@@ -19,6 +19,7 @@ describe('UsersService', () => {
     name: 'John Doe',
     email: 'email@example.com',
     password_hash: 'password_hashed',
+    creatures: [],
   };
 
   beforeEach(async () => {
@@ -146,6 +147,7 @@ describe('UsersService', () => {
           name: updateUserDto.name,
           email: updateUserDto.email,
           password_hash: mockedPasswordHash,
+          creatures: [],
         });
 
         expect(user).toEqual(mockedUser);

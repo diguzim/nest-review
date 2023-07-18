@@ -10,10 +10,19 @@ describe('CreaturesService', () => {
 
   const CREATURE_REPOSITORY_TOKEN = getRepositoryToken(Creature);
 
+  const user = {
+    id: 1,
+    name: 'John Doe',
+    email: 'email@example.com',
+    password_hash: 'password_hash',
+    creatures: [],
+  };
+
   const creature_id = 1;
   const mockedCreature = {
     id: creature_id,
     name: 'Orc',
+    user: user,
   };
 
   beforeEach(async () => {
@@ -44,10 +53,10 @@ describe('CreaturesService', () => {
   });
 
   describe('create', () => {
-    const createCreatureDto = { name: mockedCreature.name };
+    const createCreatureDto = { name: mockedCreature.name, user: user };
 
     it('should save a creature using the creature repository', async () => {
-      await service.create(createCreatureDto);
+      await service.create(createCreatureDto, user);
 
       expect(creatureRepository.save).toHaveBeenCalledWith(createCreatureDto);
     });

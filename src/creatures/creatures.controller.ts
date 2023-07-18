@@ -9,11 +9,13 @@ import {
   Post,
   Put,
   UsePipes,
+  Request,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreaturesService } from './creatures.service';
 import { CreateCreatureDto, UpdateCreatureDto } from './dto';
 import { Public } from '../decorators';
+import { AuthenticatedRequest } from '../auth/auth.controller';
 
 @Controller('creatures')
 export class CreaturesController {
@@ -21,8 +23,11 @@ export class CreaturesController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async create(@Body() createCreatureDto: CreateCreatureDto) {
-    return this.creaturesService.create(createCreatureDto);
+  async create(
+    @Body() createCreatureDto: CreateCreatureDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.creaturesService.create(createCreatureDto, req.user);
   }
 
   @Public()
