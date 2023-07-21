@@ -14,7 +14,7 @@ export class Drop {
   item: Item;
 
   @Column({ nullable: false })
-  dropChance: number;
+  dropRate: number;
 
   @Column({ nullable: false })
   minDrops: number;

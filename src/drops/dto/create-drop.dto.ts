@@ -7,60 +7,32 @@ import {
   IsNotEmpty,
   Min,
   Max,
+  IsInt,
 } from 'class-validator';
 
-@ValidatorConstraint({ name: 'minMaxDrops', async: false })
-export class MinMaxDropsValidator implements ValidatorConstraintInterface {
+@ValidatorConstraint({ name: 'greaterThanOrEqualToMinValidator', async: false })
+export class GreaterThanOrEqualToMinValidator
+  implements ValidatorConstraintInterface
+{
   validate(maxDrops: any, args: ValidationArguments) {
     const { object } = args;
     const minDrops: number = (object as any)['minDrops'];
-    return minDrops <= maxDrops;
+    return maxDrops >= minDrops;
   }
 
   defaultMessage(args: ValidationArguments) {
-    return `maxDrops must not be smaller than minDrops`;
+    return 'maxDrops must be greater than or equal to minDrops';
   }
 }
 
-export function MinMaxDrops(validationOptions?: ValidationOptions) {
+export function GreaterThanOrEqualToMin(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: MinMaxDropsValidator,
-    });
-  };
-}
-
-@ValidatorConstraint({ name: 'minAccordingToDropRate', async: false })
-export class MinAccordingToDropRateValidator
-  implements ValidatorConstraintInterface
-{
-  validate(minDrops: any, args: ValidationArguments) {
-    const { object } = args;
-    const dropChance: number = (object as any)['dropChance'];
-    if (dropChance == 100) {
-      return minDrops >= 1;
-    }
-
-    return true;
-  }
-
-  defaultMessage(args: ValidationArguments) {
-    return `minDrops must be at least 1 if dropChance is 100`;
-  }
-}
-
-export function MinAccordingToDropRate(validationOptions?: ValidationOptions) {
-  return function (object: object, propertyName: string) {
-    registerDecorator({
-      target: object.constructor,
-      propertyName: propertyName,
-      options: validationOptions,
-      constraints: [],
-      validator: MinAccordingToDropRateValidator,
+      validator: GreaterThanOrEqualToMinValidator,
     });
   };
 }
@@ -74,15 +46,16 @@ export class CreateDropDto {
 
   @IsNotEmpty()
   @Min(0)
-  @Max(100)
-  dropChance: number;
+  @Max(1)
+  dropRate: number;
 
   @IsNotEmpty()
-  @Min(0)
-  @MinAccordingToDropRate()
+  @IsInt()
+  @Min(1)
   minDrops: number;
 
   @IsNotEmpty()
-  @MinMaxDrops()
+  @IsInt()
+  @GreaterThanOrEqualToMin()
   maxDrops: number;
 }
