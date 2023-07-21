@@ -6,12 +6,12 @@ import { Repository } from 'typeorm';
 import { Creature } from '../creatures/creature.entity';
 import { Item } from '../items/item.entity';
 
-class CreatureNotFoundError extends NotFoundException {
+export class CreatureNotFoundError extends NotFoundException {
   constructor() {
     super('Creature not found');
   }
 }
-class ItemNotFoundError extends NotFoundException {
+export class ItemNotFoundError extends NotFoundException {
   constructor() {
     super('Item not found');
   }
@@ -45,9 +45,9 @@ export class DropsService {
     const drop = new Drop();
     drop.creature = creature;
     drop.item = item;
+    drop.dropRate = createDropDto.dropRate;
     drop.minDrops = createDropDto.minDrops;
     drop.maxDrops = createDropDto.maxDrops;
-    drop.dropRate = createDropDto.dropRate;
 
     return this.dropsRepository.save(drop);
   }

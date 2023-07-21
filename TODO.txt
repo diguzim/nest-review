@@ -1,4 +1,4 @@
-- Create many to many relation between creature and items (aka drop table)
+- Consider adding update operation to Drop entity
 - Configure GraphQL
 - Refactor update DTOs and services to use a better pattern (properly allowing patch, i.e., updating fields that are informed). Check nest resource generator how the update DTO is built
 - Add pagination to resources retrieval
