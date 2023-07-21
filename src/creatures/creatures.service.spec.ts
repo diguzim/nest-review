@@ -3,7 +3,8 @@ import { CreaturesService } from './creatures.service';
 import { Repository } from 'typeorm';
 import { Creature } from './creature.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { mockedUser } from '../common/test/mocked-entities';
+import { mockedCreature, mockedUser } from '../common/test/mocked-entities';
+import { generateMockedRepository } from '../common/test/mocked-providers';
 
 describe('CreaturesService', () => {
   let service: CreaturesService;
@@ -11,25 +12,13 @@ describe('CreaturesService', () => {
 
   const CREATURE_REPOSITORY_TOKEN = getRepositoryToken(Creature);
 
-  const creature_id = 1;
-  const mockedCreature = {
-    id: creature_id,
-    name: 'Orc',
-    user: mockedUser,
-  };
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CreaturesService,
         {
           provide: CREATURE_REPOSITORY_TOKEN,
-          useValue: {
-            save: jest.fn((creature) => creature),
-            find: jest.fn(),
-            findOneBy: jest.fn(),
-            delete: jest.fn(),
-          },
+          useValue: generateMockedRepository(),
         },
       ],
     }).compile();
@@ -75,12 +64,12 @@ describe('CreaturesService', () => {
         .spyOn(creatureRepository, 'findOneBy')
         .mockResolvedValue(mockedCreature);
 
-      const creature = await service.findOne(creature_id);
+      const creature = await service.findOne(mockedCreature.id);
 
       expect(creature).toEqual(mockedCreature);
 
       expect(creatureRepository.findOneBy).toHaveBeenCalledWith({
-        id: creature_id,
+        id: mockedCreature.id,
       });
     });
   });
@@ -96,10 +85,10 @@ describe('CreaturesService', () => {
           .spyOn(creatureRepository, 'findOneBy')
           .mockResolvedValue(mockedCreature);
 
-        await service.update(creature_id, updateCreatureDto);
+        await service.update(mockedCreature.id, updateCreatureDto);
 
         expect(creatureRepository.findOneBy).toHaveBeenCalledWith({
-          id: creature_id,
+          id: mockedCreature.id,
         });
 
         expect(creatureRepository.save).toHaveBeenCalledWith({
@@ -113,11 +102,14 @@ describe('CreaturesService', () => {
       it('should return null', async () => {
         jest.spyOn(creatureRepository, 'findOneBy').mockResolvedValue(null);
 
-        const creature = await service.update(creature_id, updateCreatureDto);
+        const creature = await service.update(
+          mockedCreature.id,
+          updateCreatureDto,
+        );
 
         expect(creature).toEqual(null);
         expect(creatureRepository.findOneBy).toHaveBeenCalledWith({
-          id: creature_id,
+          id: mockedCreature.id,
         });
       });
     });
@@ -129,9 +121,9 @@ describe('CreaturesService', () => {
         .spyOn(creatureRepository, 'findOneBy')
         .mockResolvedValue(mockedCreature);
 
-      await service.delete(creature_id);
+      await service.delete(mockedCreature.id);
 
-      expect(creatureRepository.delete).toHaveBeenCalledWith(creature_id);
+      expect(creatureRepository.delete).toHaveBeenCalledWith(mockedCreature.id);
     });
   });
 });

@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { generateMockedRepository } from '../common/test/mocked-providers';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -29,12 +30,7 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: USER_REPOSITORY_TOKEN,
-          useValue: {
-            save: jest.fn((user) => user),
-            find: jest.fn(),
-            findOneBy: jest.fn(),
-            delete: jest.fn(),
-          },
+          useValue: generateMockedRepository(),
         },
       ],
     }).compile();
