@@ -7,10 +7,16 @@ export class Drop {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Creature, (creature) => creature.drops, { nullable: false })
+  @ManyToOne(() => Creature, (creature) => creature.drops, {
+    nullable: false,
+    eager: true,
+  })
   creature: Creature;
 
-  @ManyToOne(() => Item, (item) => item.drops, { nullable: false })
+  @ManyToOne(() => Item, (item) => item.drops, {
+    nullable: false,
+    eager: true,
+  })
   item: Item;
 
   @Column({ nullable: false })

@@ -12,10 +12,11 @@ export class CreaturesService {
     private creaturesRepository: Repository<Creature>,
   ) {}
 
-  async create(createCreatureDto: CreateCreatureDto, user: User) {
+  create(createCreatureDto: CreateCreatureDto, user: User) {
     const creature = new Creature();
     creature.name = createCreatureDto.name;
     creature.user = user;
+
     return this.creaturesRepository.save(creature);
   }
 

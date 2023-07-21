@@ -20,7 +20,7 @@ export class GreaterThanOrEqualToMinValidator
     return maxDrops >= minDrops;
   }
 
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage() {
     return 'maxDrops must be greater than or equal to minDrops';
   }
 }
@@ -37,6 +37,29 @@ export function GreaterThanOrEqualToMin(validationOptions?: ValidationOptions) {
   };
 }
 
+@ValidatorConstraint({ name: 'isNonNegativeValidator', async: false })
+export class IsNonNegativeValidator implements ValidatorConstraintInterface {
+  validate(dropRate: any) {
+    return dropRate >= 0;
+  }
+
+  defaultMessage() {
+    return 'dropRate must be greater than or equal to 0';
+  }
+}
+
+export function IsNonNegative(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsNonNegativeValidator,
+    });
+  };
+}
+
 export class CreateDropDto {
   @IsNotEmpty()
   creatureId: number;
@@ -45,7 +68,7 @@ export class CreateDropDto {
   itemId: number;
 
   @IsNotEmpty()
-  @Min(0)
+  @IsNonNegative()
   @Max(1)
   dropRate: number;
 

@@ -1,22 +1,41 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { DropsService } from './drops.service';
 import { CreateDropDto } from './dto/create-drop.dto';
+import { Public } from '../decorators';
 
 @Controller('drops')
 export class DropsController {
   constructor(private readonly dropsService: DropsService) {}
 
   @Post()
-  create(@Body() createDropDto: CreateDropDto) {
-    return this.dropsService.create(createDropDto);
+  @UsePipes(ValidationPipe) //TODO: Time to consider a global pipe
+  async create(@Body() createDropDto: CreateDropDto) {
+    const result = await this.dropsService.create(createDropDto);
+
+    if (result instanceof Error) {
+      throw result;
+    }
+
+    return result;
   }
 
   @Get()
+  @Public()
   findAll() {
     return this.dropsService.findAll();
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) {
     return this.dropsService.findOne(+id);
   }
