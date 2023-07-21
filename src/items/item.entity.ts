@@ -1,5 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { User } from '../users/user.entity';
+import { Drop } from '../drops/drop.entity';
 
 @Entity()
 export class Item {
@@ -11,4 +18,7 @@ export class Item {
 
   @ManyToOne(() => User, (user) => user.items)
   user: User;
+
+  @OneToMany(() => Drop, (drop) => drop.item)
+  drops: Drop[];
 }

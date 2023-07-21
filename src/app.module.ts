@@ -16,6 +16,8 @@ import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ItemsModule } from './items/items.module';
 import { Item } from './items/item.entity';
+import { DropsModule } from './drops/drops.module';
+import { Drop } from './drops/drop.entity';
 
 @Module({
   imports: [
@@ -33,7 +35,7 @@ import { Item } from './items/item.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User, Creature, Item],
+        entities: [User, Creature, Item, Drop],
         synchronize: true, //TODO Change this on production
       }),
       inject: [ConfigService],
@@ -42,6 +44,7 @@ import { Item } from './items/item.entity';
     CreaturesModule,
     AuthModule,
     ItemsModule,
+    DropsModule,
   ],
   providers: [
     {
