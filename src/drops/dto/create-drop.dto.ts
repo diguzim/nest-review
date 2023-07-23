@@ -9,19 +9,20 @@ import {
   Max,
   IsInt,
 } from 'class-validator';
+import { IsNonNegative } from '../../common/validators';
 
 @ValidatorConstraint({ name: 'greaterThanOrEqualToMinValidator', async: false })
 export class GreaterThanOrEqualToMinValidator
   implements ValidatorConstraintInterface
 {
-  validate(maxDrops: any, args: ValidationArguments) {
+  validate(value: any, args: ValidationArguments) {
     const { object } = args;
     const minDrops: number = (object as any)['minDrops'];
-    return maxDrops >= minDrops;
+    return value >= minDrops;
   }
 
-  defaultMessage() {
-    return 'maxDrops must be greater than or equal to minDrops';
+  defaultMessage(args: ValidationArguments) {
+    return `${args.property} must be greater than or equal to minDrops`;
   }
 }
 
@@ -33,29 +34,6 @@ export function GreaterThanOrEqualToMin(validationOptions?: ValidationOptions) {
       options: validationOptions,
       constraints: [],
       validator: GreaterThanOrEqualToMinValidator,
-    });
-  };
-}
-
-@ValidatorConstraint({ name: 'isNonNegativeValidator', async: false })
-export class IsNonNegativeValidator implements ValidatorConstraintInterface {
-  validate(dropRate: any) {
-    return dropRate >= 0;
-  }
-
-  defaultMessage() {
-    return 'dropRate must be greater than or equal to 0';
-  }
-}
-
-export function IsNonNegative(validationOptions?: ValidationOptions) {
-  return function (object: object, propertyName: string) {
-    registerDecorator({
-      target: object.constructor,
-      propertyName: propertyName,
-      options: validationOptions,
-      constraints: [],
-      validator: IsNonNegativeValidator,
     });
   };
 }
