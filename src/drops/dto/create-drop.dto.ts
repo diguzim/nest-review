@@ -1,42 +1,6 @@
-import {
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-  ValidationArguments,
-  ValidationOptions,
-  registerDecorator,
-  IsNotEmpty,
-  Min,
-  Max,
-  IsInt,
-} from 'class-validator';
+import { IsNotEmpty, Min, Max, IsInt } from 'class-validator';
 import { IsNonNegative } from '../../common/validators';
-
-@ValidatorConstraint({ name: 'greaterThanOrEqualToMinValidator', async: false })
-export class GreaterThanOrEqualToMinValidator
-  implements ValidatorConstraintInterface
-{
-  validate(value: any, args: ValidationArguments) {
-    const { object } = args;
-    const minDrops: number = (object as any)['minDrops'];
-    return value >= minDrops;
-  }
-
-  defaultMessage(args: ValidationArguments) {
-    return `${args.property} must be greater than or equal to minDrops`;
-  }
-}
-
-export function GreaterThanOrEqualToMin(validationOptions?: ValidationOptions) {
-  return function (object: object, propertyName: string) {
-    registerDecorator({
-      target: object.constructor,
-      propertyName: propertyName,
-      options: validationOptions,
-      constraints: [],
-      validator: GreaterThanOrEqualToMinValidator,
-    });
-  };
-}
+import { GreaterThanOrEqualToMinDrops } from './GreaterThanOrEqualToMinDrops';
 
 export class CreateDropDto {
   @IsNotEmpty()
@@ -57,6 +21,6 @@ export class CreateDropDto {
 
   @IsNotEmpty()
   @IsInt()
-  @GreaterThanOrEqualToMin()
+  @GreaterThanOrEqualToMinDrops()
   maxDrops: number;
 }

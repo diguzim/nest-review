@@ -3,14 +3,17 @@ import { IsNonNegative } from './IsNonNegative';
 import { plainToInstance } from 'class-transformer';
 
 describe('IsNonNegativeDecorator', () => {
-  it('should assert for no errors with zero', async () => {
+  class TestDTO {
+    @IsNonNegative()
+    value: number;
+  }
+
+  it('should assert for no errors when with valid values', async () => {
     const validValue = 0;
-    class TestDTO {
-      @IsNonNegative()
-      dropRate: number;
-    }
-    const dto = new TestDTO();
-    dto.dropRate = validValue;
+
+    const dto = plainToInstance(TestDTO, {
+      value: validValue,
+    });
 
     const errors = await validate(dto);
 
@@ -19,12 +22,10 @@ describe('IsNonNegativeDecorator', () => {
 
   it('should assert for no errors with positive value', async () => {
     const validValue = 5;
-    class TestDTO {
-      @IsNonNegative()
-      dropRate: number;
-    }
-    const dto = new TestDTO();
-    dto.dropRate = validValue;
+
+    const dto = plainToInstance(TestDTO, {
+      value: validValue,
+    });
 
     const errors = await validate(dto);
 
