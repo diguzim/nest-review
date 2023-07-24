@@ -60,6 +60,38 @@ export class DropsService {
     return this.dropsRepository.findOneBy({ id });
   }
 
+  async update(id: number, updateDropDto: CreateDropDto) {
+    const creature = await this.creaturesRepository.findOneBy({
+      id: updateDropDto.creatureId,
+    });
+    if (!creature) {
+      return new CreatureNotFoundError();
+    }
+
+    const item = await this.itemsRepository.findOneBy({
+      id: updateDropDto.itemId,
+    });
+    if (!item) {
+      return new ItemNotFoundError();
+    }
+
+    let drop = await this.dropsRepository.findOneBy({ id });
+    console.log('drop', drop);
+
+    if (!drop) {
+      return null;
+    }
+
+    drop.creature = creature;
+    drop.item = item;
+    drop.dropRate = updateDropDto.dropRate;
+    drop.minDrops = updateDropDto.minDrops;
+    drop.maxDrops = updateDropDto.maxDrops;
+
+    drop = await this.dropsRepository.save(drop);
+    return drop;
+  }
+
   delete(id: number) {
     return this.dropsRepository.delete(id);
   }

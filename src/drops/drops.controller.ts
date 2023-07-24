@@ -7,10 +7,13 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Put,
+  NotFoundException,
 } from '@nestjs/common';
 import { DropsService } from './drops.service';
 import { CreateDropDto } from './dto/create-drop.dto';
 import { Public } from '../decorators';
+import { UpdateDropDto } from './dto/update-drop.dto';
 
 @Controller('drops')
 export class DropsController {
@@ -38,6 +41,22 @@ export class DropsController {
   @Public()
   findOne(@Param('id') id: string) {
     return this.dropsService.findOne(+id);
+  }
+
+  @Put(':id')
+  @UsePipes(ValidationPipe)
+  async update(@Param('id') id: string, @Body() updateDropDto: UpdateDropDto) {
+    const result = await this.dropsService.update(+id, updateDropDto);
+
+    if (result instanceof Error) {
+      throw result;
+    }
+
+    if (!result) {
+      throw new NotFoundException();
+    }
+
+    return result;
   }
 
   @Delete(':id')
