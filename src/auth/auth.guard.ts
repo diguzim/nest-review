@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../decorators';
 import { UsersService } from '../users/users.service';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -29,7 +30,11 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = this.getRequest(context);
+    if (!request) {
+      throw new UnauthorizedException();
+    }
+
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -46,6 +51,21 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     return true;
+  }
+
+  private getRequest(context: ExecutionContext) {
+    let request = context.switchToHttp().getRequest();
+    if (!request) {
+      // attempt to get it from GraphQL context
+      try {
+        const gqlContext = GqlExecutionContext.create(context);
+        request = gqlContext.getContext().req;
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+
+    return request;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {

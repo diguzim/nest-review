@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { Reflector } from '@nestjs/core';
 import { UnauthorizedException } from '@nestjs/common';
 import { mockedUser } from '../common/test/mocked-entities';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;
@@ -70,6 +71,76 @@ describe('AuthGuard', () => {
     beforeEach(() => {
       const reflector = guard['reflector'];
       (reflector.getAllAndOverride as jest.Mock).mockReturnValue(false);
+    });
+
+    describe('when context.switchToHttp().getRequest() returns undefined', () => {
+      describe('when GqlExecutionContext.create(context).getContext().req raises an error', () => {
+        it('should throw UnauthorizedException', async () => {
+          // stub GqlExecutionContext.create
+          jest.spyOn(GqlExecutionContext, 'create').mockReturnValue({
+            getContext: jest.fn().mockImplementation(() => {
+              throw new Error();
+            }),
+          } as any);
+
+          const context = {
+            getHandler: jest.fn(),
+            getClass: jest.fn(),
+            switchToHttp: jest.fn().mockReturnThis(),
+            getRequest: jest.fn().mockReturnValue(undefined),
+          };
+
+          await expect(guard.canActivate(context as any)).rejects.toThrow(
+            UnauthorizedException,
+          );
+        });
+      });
+
+      describe('when GqlExecutionContext.create(context).getContext().req returns undefined', () => {
+        it('should throw UnauthorizedException', async () => {
+          // stub GqlExecutionContext.create
+          jest.spyOn(GqlExecutionContext, 'create').mockReturnValue({
+            getContext: jest.fn().mockReturnValue({
+              req: undefined,
+            }),
+          } as any);
+
+          const context = {
+            getHandler: jest.fn(),
+            getClass: jest.fn(),
+            switchToHttp: jest.fn().mockReturnThis(),
+            getRequest: jest.fn().mockReturnValue(undefined),
+          };
+
+          await expect(guard.canActivate(context as any)).rejects.toThrow(
+            UnauthorizedException,
+          );
+        });
+      });
+
+      describe('when GqlExecutionContext.create(context).getContext().req returns a request', () => {
+        it('should throw UnauthorizedException if there is no authorization header', async () => {
+          // stub GqlExecutionContext.create
+          jest.spyOn(GqlExecutionContext, 'create').mockReturnValue({
+            getContext: jest.fn().mockReturnValue({
+              req: {
+                headers: {},
+              },
+            }),
+          } as any);
+
+          const context = {
+            getHandler: jest.fn(),
+            getClass: jest.fn(),
+            switchToHttp: jest.fn().mockReturnThis(),
+            getRequest: jest.fn().mockReturnValue(undefined),
+          };
+
+          await expect(guard.canActivate(context as any)).rejects.toThrow(
+            UnauthorizedException,
+          );
+        });
+      });
     });
 
     describe('when no token could be extracted from the headers', () => {
