@@ -18,6 +18,9 @@ import { ItemsModule } from './items/items.module';
 import { Item } from './items/item.entity';
 import { DropsModule } from './drops/drops.module';
 import { Drop } from './drops/drop.entity';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { UsersResolver } from './users/users.resolver';
 
 @Module({
   imports: [
@@ -25,6 +28,10 @@ import { Drop } from './drops/drop.entity';
       isGlobal: true,
       cache: true,
       load: [configuration],
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -47,6 +54,7 @@ import { Drop } from './drops/drop.entity';
     DropsModule,
   ],
   providers: [
+    UsersResolver,
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,

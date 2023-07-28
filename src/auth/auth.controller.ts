@@ -4,14 +4,12 @@ import {
   Post,
   HttpCode,
   HttpStatus,
-  UseGuards,
   Get,
   Request,
   NotFoundException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto';
-import { AuthGuard } from './auth.guard';
 import { Public } from '../decorators';
 import { User } from '../users/user.entity';
 
@@ -36,7 +34,6 @@ export class AuthController {
     return result;
   }
 
-  @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req: AuthenticatedRequest) {
     return req.user;

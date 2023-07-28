@@ -5,11 +5,15 @@ import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
-  app.use(helmet());
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT');
+  const env = configService.get<string>('APP_ENV');
+
+  if (env !== 'local') {
+    app.enableCors();
+    app.use(helmet());
+  }
 
   await app.listen(port || 3000);
 }
