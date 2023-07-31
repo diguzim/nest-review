@@ -21,6 +21,7 @@ import { Drop } from './drops/drop.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersResolver } from './users/users.resolver';
+import { CreaturesResolver } from './creatures/creatures.resolver';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { UsersResolver } from './users/users.resolver';
   ],
   providers: [
     UsersResolver,
+    CreaturesResolver,
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,

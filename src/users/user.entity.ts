@@ -4,8 +4,8 @@ import { Creature } from '../creatures/creature.entity';
 import { Item } from '../items/item.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 
-@ObjectType()
 @Entity()
+@ObjectType()
 export class User {
   @PrimaryGeneratedColumn()
   @Field()
