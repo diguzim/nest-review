@@ -10,6 +10,7 @@ export const mockedUser = {
 export const mockedCreature = {
   id: 1,
   name: 'Orc',
+  userId: mockedUser.id,
   user: mockedUser,
   drops: [],
 };

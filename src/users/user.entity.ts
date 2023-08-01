@@ -26,7 +26,7 @@ export class User {
 
   @OneToMany(() => Creature, (creature) => creature.user)
   @Exclude()
-  @Field((type) => [Creature], { nullable: true })
+  @Field(() => [Creature], { nullable: true })
   creatures: Creature[];
 
   @OneToMany(() => Item, (item) => item.user)

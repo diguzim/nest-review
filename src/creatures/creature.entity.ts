@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Drop } from '../drops/drop.entity';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
@@ -20,7 +20,12 @@ export class Creature {
   @Field()
   name: string;
 
+  @Column()
+  @HideField()
+  userId: number;
+
   @ManyToOne(() => User, (user) => user.creatures)
+  @Field(() => User, { nullable: true })
   user: User;
 
   @OneToMany(() => Drop, (drop) => drop.creature)
