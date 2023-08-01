@@ -20,8 +20,8 @@ export class CreaturesService {
     return this.creaturesRepository.save(creature);
   }
 
-  findAll(): Promise<Creature[]> {
-    return this.creaturesRepository.find();
+  findAll(params?: any): Promise<Creature[]> {
+    return this.creaturesRepository.find(params);
   }
 
   findOne(id: number): Promise<Creature | null> {

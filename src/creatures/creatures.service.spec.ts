@@ -46,15 +46,33 @@ describe('CreaturesService', () => {
 
   describe('findAll', () => {
     const mockedCreatures = [mockedCreature];
+    describe('without params', () => {
+      it('should return an array of creatures using the creature repository', async () => {
+        jest
+          .spyOn(creatureRepository, 'find')
+          .mockResolvedValue(mockedCreatures);
 
-    it('should return an array of creatures using the creature repository', async () => {
-      jest.spyOn(creatureRepository, 'find').mockResolvedValue(mockedCreatures);
+        const creatures = await service.findAll();
 
-      const creatures = await service.findAll();
+        expect(creatures).toEqual(mockedCreatures);
 
-      expect(creatures).toEqual(mockedCreatures);
+        expect(creatureRepository.find).toHaveBeenCalledWith(undefined);
+      });
+    });
 
-      expect(creatureRepository.find).toHaveBeenCalled();
+    describe('without params', () => {
+      it('should return an array of creatures using the creature repository', async () => {
+        const params = { userId: mockedUser.id };
+        jest
+          .spyOn(creatureRepository, 'find')
+          .mockResolvedValue(mockedCreatures);
+
+        const creatures = await service.findAll(params);
+
+        expect(creatures).toEqual(mockedCreatures);
+
+        expect(creatureRepository.find).toHaveBeenCalledWith(params);
+      });
     });
   });
 

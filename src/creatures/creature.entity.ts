@@ -7,13 +7,13 @@ import {
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Drop } from '../drops/drop.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
 export class Creature {
   @PrimaryGeneratedColumn()
-  @Field()
+  @Field(() => Int)
   id: number;
 
   @Column({ nullable: false })

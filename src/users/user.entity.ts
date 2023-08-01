@@ -2,13 +2,13 @@ import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Creature } from '../creatures/creature.entity';
 import { Item } from '../items/item.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn()
-  @Field()
+  @Field(() => Int)
   id: number;
 
   @Column({ nullable: false })
@@ -26,7 +26,7 @@ export class User {
 
   @OneToMany(() => Creature, (creature) => creature.user)
   @Exclude()
-  // @Field()
+  @Field((type) => [Creature], { nullable: true })
   creatures: Creature[];
 
   @OneToMany(() => Item, (item) => item.user)
