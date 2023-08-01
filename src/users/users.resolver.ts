@@ -5,11 +5,13 @@ import {
   Parent,
   Args,
   Int,
+  Mutation,
 } from '@nestjs/graphql';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { Public } from '../decorators';
 import { CreaturesService } from '../creatures/creatures.service';
+import { CreateUserDto } from './dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -40,5 +42,11 @@ export class UsersResolver {
   async creatures(@Parent() user: User) {
     const { id } = user;
     return this.creaturesService.findAll({ userId: id });
+  }
+
+  @Public()
+  @Mutation(() => User)
+  async createUser(@Args('createUserDto') createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 }
