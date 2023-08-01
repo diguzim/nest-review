@@ -21,7 +21,6 @@ export class User {
 
   @Column({ nullable: false })
   @Exclude()
-  @Field()
   password_hash: string;
 
   @OneToMany(() => Creature, (creature) => creature.user)

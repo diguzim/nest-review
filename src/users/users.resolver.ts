@@ -1,4 +1,11 @@
-import { Resolver, Query, ResolveField, Parent, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  ResolveField,
+  Parent,
+  Args,
+  Int,
+} from '@nestjs/graphql';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { Public } from '../decorators';
@@ -13,7 +20,13 @@ export class UsersResolver {
 
   @Public()
   @Query(() => [User])
-  async users(@Args('id', { nullable: true }) id?: number): Promise<User[]> {
+  async users(
+    @Args('id', {
+      nullable: true,
+      type: () => Int,
+    })
+    id?: number,
+  ): Promise<User[]> {
     if (id) {
       const user = await this.usersService.findOne(id);
       return user ? [user] : [];
