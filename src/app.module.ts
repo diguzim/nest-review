@@ -22,6 +22,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersResolver } from './users/users.resolver';
 import { CreaturesResolver } from './creatures/creatures.resolver';
+import { NotificationsModule } from './notifications/notifications.module';
+// import { MicroservicesClientModule } from './common/modules/microservices-client.module';
 
 @Module({
   imports: [
@@ -53,6 +55,8 @@ import { CreaturesResolver } from './creatures/creatures.resolver';
     AuthModule,
     ItemsModule,
     DropsModule,
+    NotificationsModule,
+    // MicroservicesClientModule,
   ],
   providers: [
     UsersResolver,
