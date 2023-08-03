@@ -2,8 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
-async function bootstrap() {
+async function bootstrapHTTP() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
@@ -17,4 +18,19 @@ async function bootstrap() {
 
   await app.listen(port || 3000);
 }
-bootstrap();
+
+async function boostrapMicroservice() {
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.TCP,
+      options: {
+        port: 3001,
+      },
+    },
+  );
+  await app.listen();
+}
+
+bootstrapHTTP();
+boostrapMicroservice();

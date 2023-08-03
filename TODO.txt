@@ -1,2 +1,2 @@
-- Configure GraphQL
+- Consider configuring Validation pipe as a global pipe (and using 422 status code for validation errors)
 - Add pagination to resources retrieval
