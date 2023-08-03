@@ -23,7 +23,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersResolver } from './users/users.resolver';
 import { CreaturesResolver } from './creatures/creatures.resolver';
 import { NotificationsModule } from './notifications/notifications.module';
-// import { MicroservicesClientModule } from './common/modules/microservices-client.module';
+import { MicroservicesClientModule } from './common/modules/microservices-client.module';
 
 @Module({
   imports: [
@@ -56,7 +56,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     ItemsModule,
     DropsModule,
     NotificationsModule,
-    // MicroservicesClientModule,
+    MicroservicesClientModule,
   ],
   providers: [
     UsersResolver,
