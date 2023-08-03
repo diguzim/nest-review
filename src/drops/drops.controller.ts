@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   UsePipes,
-  ValidationPipe,
   Put,
   NotFoundException,
 } from '@nestjs/common';
@@ -20,7 +19,6 @@ export class DropsController {
   constructor(private readonly dropsService: DropsService) {}
 
   @Post()
-  @UsePipes(ValidationPipe) //TODO: Time to consider a global pipe
   async create(@Body() createDropDto: CreateDropDto) {
     const result = await this.dropsService.create(createDropDto);
 
@@ -44,7 +42,6 @@ export class DropsController {
   }
 
   @Put(':id')
-  @UsePipes(ValidationPipe)
   async update(@Param('id') id: string, @Body() updateDropDto: UpdateDropDto) {
     const result = await this.dropsService.update(+id, updateDropDto);
 

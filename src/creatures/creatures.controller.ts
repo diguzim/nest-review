@@ -9,7 +9,6 @@ import {
   Post,
   UsePipes,
   Request,
-  ValidationPipe,
   Patch,
 } from '@nestjs/common';
 import { CreaturesService } from './creatures.service';
@@ -22,7 +21,6 @@ export class CreaturesController {
   constructor(private readonly creaturesService: CreaturesService) {}
 
   @Post()
-  @UsePipes(ValidationPipe)
   async create(
     @Body() createCreatureDto: CreateCreatureDto,
     @Request() req: AuthenticatedRequest,
@@ -49,7 +47,6 @@ export class CreaturesController {
   }
 
   @Patch(':id')
-  @UsePipes(ValidationPipe)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCreatureDto: UpdateCreatureDto,

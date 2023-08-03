@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   UsePipes,
-  ValidationPipe,
   Request,
   NotFoundException,
 } from '@nestjs/common';
@@ -21,7 +20,6 @@ export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
   @Post()
-  @UsePipes(ValidationPipe)
   create(
     @Body() createItemDto: CreateItemDto,
     @Request() req: AuthenticatedRequest,
@@ -48,7 +46,6 @@ export class ItemsController {
   }
 
   @Patch(':id')
-  @UsePipes(ValidationPipe)
   async update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
     const item = await this.itemsService.update(+id, updateItemDto);
 
