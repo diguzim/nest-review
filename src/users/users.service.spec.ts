@@ -5,10 +5,12 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { generateMockedRepository } from '../common/test/mocked-providers';
+import { ClientProxy } from '@nestjs/microservices';
 
 describe('UsersService', () => {
   let service: UsersService;
   let userRepository: Repository<User>;
+  let notificationsClient: ClientProxy;
   let hashSpy: jest.SpyInstance;
   let genSaltSpy: jest.SpyInstance;
 
@@ -32,11 +34,18 @@ describe('UsersService', () => {
           provide: USER_REPOSITORY_TOKEN,
           useValue: generateMockedRepository(),
         },
+        {
+          provide: 'NOTIFICATIONS_SERVICE',
+          useValue: {
+            emit: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
     userRepository = module.get<Repository<User>>(USER_REPOSITORY_TOKEN);
+    notificationsClient = module.get<ClientProxy>('NOTIFICATIONS_SERVICE');
     hashSpy = jest.spyOn(bcrypt, 'hash');
     genSaltSpy = jest.spyOn(bcrypt, 'genSalt');
   });
@@ -48,6 +57,7 @@ describe('UsersService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
     expect(userRepository).toBeDefined();
+    expect(notificationsClient).toBeDefined();
   });
 
   describe('create', () => {
@@ -74,6 +84,14 @@ describe('UsersService', () => {
         email: createUserDto.email,
         password_hash: mockedPasswordHash,
       });
+
+      expect(notificationsClient.emit).toHaveBeenCalledWith(
+        'send_welcome_email',
+        {
+          name: createUserDto.name,
+          email: createUserDto.email,
+        },
+      );
     });
   });
 

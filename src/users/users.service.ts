@@ -1,20 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @Inject('NOTIFICATIONS_SERVICE')
+    private notificationsClient: ClientProxy,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = await this.buildUserEntity(createUserDto);
-    return this.usersRepository.save(user);
+    const result = await this.usersRepository.save(user);
+
+    this.notificationsClient.emit('send_welcome_email', {
+      name: user.name,
+      email: user.email,
+    });
+
+    return result;
   }
 
   findAll(): Promise<User[]> {
