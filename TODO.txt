@@ -1,1 +1,2 @@
+- Experience with serverless architecture and AWS Lambda - https://docs.nestjs.com/faq/serverless
 - Add pagination to resources retrieval
