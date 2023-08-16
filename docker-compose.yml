@@ -1,8 +1,7 @@
 version: '3'
 services:
   mysql:
-    image: mysql:latest
-    restart: always
+    image: mysql:8.1.0
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: nest-review
@@ -11,4 +10,17 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ~/.docker/mysql/data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+  nest-review:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
