@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Post,
   Patch,
-  UsePipes,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
