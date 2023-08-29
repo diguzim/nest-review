@@ -1,0 +1,15 @@
+name: push-to-any-repository
+run-name: ${{ github.actor }} is pushing to repository
+on: [push]
+jobs:
+  all-in-one:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ' 20.5.1'
+      - run: npm install
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
