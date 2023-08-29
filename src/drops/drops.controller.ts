@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UsePipes,
   Put,
   NotFoundException,
 } from '@nestjs/common';
