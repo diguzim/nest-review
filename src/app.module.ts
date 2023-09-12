@@ -46,7 +46,7 @@ import { MicroservicesClientModule } from './common/modules/microservices-client
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [User, Creature, Item, Drop],
-        synchronize: true, //TODO Change this on production
+        synchronize: configService.get('APP_ENV') === 'local',
       }),
       inject: [ConfigService],
     }),
