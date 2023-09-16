@@ -12,15 +12,24 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Public } from '../decorators';
+import { CreateUserUseCase } from '../@core/application/user/create-user.use-case';
+import {
+  UserSerialized,
+  UserSerializer,
+} from '../common/serializers/user.serializer';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private createUserUseCase: CreateUserUseCase,
+  ) {}
 
   @Post()
   @Public()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserSerialized> {
+    const user = await this.createUserUseCase.execute(createUserDto);
+    return UserSerializer.serialize(user);
   }
 
   @Get()
