@@ -8,7 +8,7 @@ export type UserProps = {
 };
 
 export class User {
-  private _id: number | undefined;
+  private _id?: number;
   private _name: string;
   private _email: string;
   private _password_hash: string;
@@ -19,11 +19,11 @@ export class User {
     Object.assign(this, props);
   }
 
-  public static create(props: UserProps): User {
+  public static create(props: UserProps) {
     return new User(props);
   }
 
-  get id(): number | undefined {
+  get id() {
     return this._id;
   }
 
@@ -31,7 +31,7 @@ export class User {
     this._id = value;
   }
 
-  get name(): string {
+  get name() {
     return this._name;
   }
 
@@ -39,7 +39,7 @@ export class User {
     this._name = value;
   }
 
-  get email(): string {
+  get email() {
     return this._email;
   }
 
@@ -47,7 +47,7 @@ export class User {
     this._email = value;
   }
 
-  get password_hash(): string {
+  get password_hash() {
     return this._password_hash;
   }
 
