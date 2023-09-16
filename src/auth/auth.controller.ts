@@ -11,10 +11,10 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto';
 import { Public } from '../decorators';
-import { User } from '../users/user.entity';
+import { User__OLD } from '../users/user.entity';
 
 export interface AuthenticatedRequest extends Request {
-  user: User;
+  user: User__OLD;
 }
 
 @Controller('auth')

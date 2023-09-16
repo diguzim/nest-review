@@ -5,7 +5,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { User } from '../users/user.entity';
+import { User__OLD } from '../users/user.entity';
 import { Drop } from '../drops/drop.entity';
 
 @Entity()
@@ -16,8 +16,8 @@ export class Item {
   @Column({ nullable: false })
   name: string;
 
-  @ManyToOne(() => User, (user) => user.items)
-  user: User;
+  @ManyToOne(() => User__OLD, (user) => user.items)
+  user: User__OLD;
 
   @OneToMany(() => Drop, (drop) => drop.item)
   drops: Drop[];

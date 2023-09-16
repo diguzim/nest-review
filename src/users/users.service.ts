@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User__OLD } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { ClientProxy } from '@nestjs/microservices';
@@ -9,13 +9,13 @@ import { ClientProxy } from '@nestjs/microservices';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(User__OLD)
+    private usersRepository: Repository<User__OLD>,
     @Inject('NOTIFICATIONS_SERVICE')
     private notificationsClient: ClientProxy,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User__OLD> {
     const user = await this.buildUserEntity(createUserDto);
     const result = await this.usersRepository.save(user);
 
@@ -27,25 +27,28 @@ export class UsersService {
     return result;
   }
 
-  findAll(): Promise<User[]> {
+  findAll(): Promise<User__OLD[]> {
     return this.usersRepository.find();
   }
 
-  findAllWithRelations(): Promise<User[]> {
+  findAllWithRelations(): Promise<User__OLD[]> {
     return this.usersRepository.find({
       relations: ['creatures', 'items'],
     });
   }
 
-  findOne(id: number): Promise<User | null> {
+  findOne(id: number): Promise<User__OLD | null> {
     return this.usersRepository.findOneBy({ id });
   }
 
-  findOneBy(options: any): Promise<User | null> {
+  findOneBy(options: any): Promise<User__OLD | null> {
     return this.usersRepository.findOneBy(options);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User__OLD | null> {
     let user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
@@ -64,14 +67,14 @@ export class UsersService {
   }
 
   private async buildUserEntity(userDto: CreateUserDto) {
-    const user = new User();
+    const user = new User__OLD();
     user.name = userDto.name;
     user.email = userDto.email;
     user.password_hash = await this.hashPassword(userDto.password);
     return user;
   }
 
-  private async updateUserEntity(user: User, userDto: UpdateUserDto) {
+  private async updateUserEntity(user: User__OLD, userDto: UpdateUserDto) {
     user.name = userDto.name;
     user.email = userDto.email;
     user.password_hash = await this.hashPassword(userDto.password);

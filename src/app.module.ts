@@ -9,7 +9,7 @@ import { LoggerMiddleware } from './common/middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/user.entity';
+import { User__OLD } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 import { Creature } from './creatures/creature.entity';
 import { AuthModule } from './auth/auth.module';
@@ -24,6 +24,7 @@ import { UsersResolver } from './users/users.resolver';
 import { CreaturesResolver } from './creatures/creatures.resolver';
 import { NotificationsModule } from './notifications/notifications.module';
 import { MicroservicesClientModule } from './common/modules/microservices-client.module';
+import { UserSchema } from './users/user.schema';
 
 @Module({
   imports: [
@@ -45,7 +46,7 @@ import { MicroservicesClientModule } from './common/modules/microservices-client
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User, Creature, Item, Drop],
+        entities: [User__OLD, UserSchema, Creature, Item, Drop],
         synchronize: configService.get('APP_ENV') === 'local',
       }),
       inject: [ConfigService],

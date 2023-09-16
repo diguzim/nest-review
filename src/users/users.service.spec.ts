@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User__OLD } from './user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { generateMockedRepository } from '../common/test/mocked-providers';
@@ -9,12 +9,12 @@ import { ClientProxy } from '@nestjs/microservices';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let userRepository: Repository<User>;
+  let userRepository: Repository<User__OLD>;
   let notificationsClient: ClientProxy;
   let hashSpy: jest.SpyInstance;
   let genSaltSpy: jest.SpyInstance;
 
-  const USER_REPOSITORY_TOKEN = getRepositoryToken(User);
+  const USER_REPOSITORY_TOKEN = getRepositoryToken(User__OLD);
 
   const user_id = 1;
   const mockedUser = {
@@ -44,7 +44,7 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    userRepository = module.get<Repository<User>>(USER_REPOSITORY_TOKEN);
+    userRepository = module.get<Repository<User__OLD>>(USER_REPOSITORY_TOKEN);
     notificationsClient = module.get<ClientProxy>('NOTIFICATIONS_SERVICE');
     hashSpy = jest.spyOn(bcrypt, 'hash');
     genSaltSpy = jest.spyOn(bcrypt, 'genSalt');

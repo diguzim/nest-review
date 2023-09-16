@@ -4,7 +4,7 @@ import { UpdateItemDto } from './dto/update-item.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from './item.entity';
 import { Repository } from 'typeorm';
-import { User } from '../users/user.entity';
+import { User__OLD } from '../users/user.entity';
 
 @Injectable()
 export class ItemsService {
@@ -13,7 +13,7 @@ export class ItemsService {
     private itemsRepository: Repository<Item>,
   ) {}
 
-  create(createItemDto: CreateItemDto, user: User) {
+  create(createItemDto: CreateItemDto, user: User__OLD) {
     const item = new Item();
     item.name = createItemDto.name;
     item.user = user;

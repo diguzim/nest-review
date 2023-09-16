@@ -5,7 +5,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { User } from '../users/user.entity';
+import { User__OLD } from '../users/user.entity';
 import { Drop } from '../drops/drop.entity';
 import { Field, HideField, Int, ObjectType } from '@nestjs/graphql';
 
@@ -24,9 +24,9 @@ export class Creature {
   @HideField()
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.creatures)
-  @Field(() => User, { nullable: true })
-  user: User;
+  @ManyToOne(() => User__OLD, (user) => user.creatures)
+  @Field(() => User__OLD, { nullable: true })
+  user: User__OLD;
 
   @OneToMany(() => Drop, (drop) => drop.creature)
   drops: Drop[];
