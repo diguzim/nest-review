@@ -1,4 +1,5 @@
 import { IUserRepository } from '../../domain/user/user.repository';
+import { ICryptService } from '../../services';
 import { IEmailService } from '../../services/email.service';
 import { CreateUserUseCase } from './create-user.use-case';
 
@@ -6,6 +7,7 @@ describe('CreateUserUseCase', () => {
   let createUserUseCase: CreateUserUseCase;
   let userRepository: IUserRepository;
   let emailNotification: IEmailService;
+  let cryptService: ICryptService;
 
   beforeEach(() => {
     userRepository = {
@@ -14,10 +16,14 @@ describe('CreateUserUseCase', () => {
     emailNotification = {
       sendEmail: jest.fn(),
     };
+    cryptService = {
+      hash: jest.fn((password) => Promise.resolve(`${password}_hash`)),
+    };
 
     createUserUseCase = new CreateUserUseCase(
       userRepository,
       emailNotification,
+      cryptService,
     );
   });
 
@@ -25,7 +31,7 @@ describe('CreateUserUseCase', () => {
     const user = await createUserUseCase.execute({
       name: 'name',
       email: 'email@example.com',
-      password_hash: 'password_hash',
+      password: 'password',
     });
 
     expect(user).toBeDefined();
@@ -34,6 +40,7 @@ describe('CreateUserUseCase', () => {
       user.email,
       'Welcome to the app!',
     );
+    expect(cryptService.hash).toHaveBeenCalledWith('password');
 
     expect(user.name).toEqual('name');
     expect(user.email).toEqual('email@example.com');
