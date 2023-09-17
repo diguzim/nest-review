@@ -8,4 +8,8 @@ export class UserTypeOrmRepository implements IUserRepository {
   async insert(user: User): Promise<void> {
     await this.ormRepository.save(user);
   }
+
+  async findAll(): Promise<User[]> {
+    return await this.ormRepository.find();
+  }
 }

@@ -12,6 +12,7 @@ import { DataSource } from 'typeorm';
 import { User } from '../@core/domain/user/user.entity';
 import { BCryptService } from '../common/services/b-crypt.service';
 import { EmailService } from '../common/services/email.service';
+import { GetAllUsersUseCase } from '../@core/application/user';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User__OLD]), MicroservicesClientModule],
@@ -32,6 +33,13 @@ import { EmailService } from '../common/services/email.service';
         );
       },
       inject: [UserTypeOrmRepository, EmailService, BCryptService],
+    },
+    {
+      provide: GetAllUsersUseCase,
+      useFactory: (userRepository: IUserRepository) => {
+        return new GetAllUsersUseCase(userRepository);
+      },
+      inject: [UserTypeOrmRepository],
     },
     {
       provide: UserTypeOrmRepository,

@@ -12,7 +12,10 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Public } from '../decorators';
-import { CreateUserUseCase } from '../@core/application/user/create-user.use-case';
+import {
+  CreateUserUseCase,
+  GetAllUsersUseCase,
+} from '../@core/application/user';
 import {
   UserSerialized,
   UserSerializer,
@@ -23,6 +26,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private createUserUseCase: CreateUserUseCase,
+    private getAllUsersUseCase: GetAllUsersUseCase,
   ) {}
 
   @Post()
@@ -34,8 +38,9 @@ export class UsersController {
 
   @Get()
   @Public()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll(): Promise<UserSerialized[]> {
+    const users = await this.getAllUsersUseCase.execute();
+    return users.map((user) => UserSerializer.serialize(user));
   }
 
   @Get(':id')
