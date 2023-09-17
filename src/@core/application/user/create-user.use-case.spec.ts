@@ -1,18 +1,15 @@
-import { IUserRepository } from '../../domain/user/user.repository';
+import { mockedUserRepository } from '../../../common/test/repositories/mocked-user.repository';
 import { ICryptService } from '../../services';
 import { IEmailService } from '../../services/email.service';
 import { CreateUserUseCase } from './create-user.use-case';
 
 describe('CreateUserUseCase', () => {
   let createUserUseCase: CreateUserUseCase;
-  let userRepository: IUserRepository;
+  const userRepository = mockedUserRepository;
   let emailNotification: IEmailService;
   let cryptService: ICryptService;
 
   beforeEach(() => {
-    userRepository = {
-      insert: jest.fn(),
-    };
     emailNotification = {
       sendEmail: jest.fn(),
     };
