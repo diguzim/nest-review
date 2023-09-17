@@ -15,6 +15,7 @@ import { Public } from '../decorators';
 import {
   CreateUserUseCase,
   GetAllUsersUseCase,
+  GetOneUserUseCase,
 } from '../@core/application/user';
 import {
   UserSerialized,
@@ -27,6 +28,7 @@ export class UsersController {
     private readonly usersService: UsersService,
     private createUserUseCase: CreateUserUseCase,
     private getAllUsersUseCase: GetAllUsersUseCase,
+    private getOneUserUseCase: GetOneUserUseCase,
   ) {}
 
   @Post()
@@ -46,13 +48,13 @@ export class UsersController {
   @Get(':id')
   @Public()
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findOne(id);
+    const user = await this.getOneUserUseCase.execute(id);
 
     if (!user) {
       throw new NotFoundException();
     }
 
-    return user;
+    return UserSerializer.serialize(user);
   }
 
   @Patch(':id')

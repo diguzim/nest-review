@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Get, Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
@@ -12,7 +12,10 @@ import { DataSource } from 'typeorm';
 import { User } from '../@core/domain/user/user.entity';
 import { BCryptService } from '../common/services/b-crypt.service';
 import { EmailService } from '../common/services/email.service';
-import { GetAllUsersUseCase } from '../@core/application/user';
+import {
+  GetAllUsersUseCase,
+  GetOneUserUseCase,
+} from '../@core/application/user';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User__OLD]), MicroservicesClientModule],
@@ -38,6 +41,13 @@ import { GetAllUsersUseCase } from '../@core/application/user';
       provide: GetAllUsersUseCase,
       useFactory: (userRepository: IUserRepository) => {
         return new GetAllUsersUseCase(userRepository);
+      },
+      inject: [UserTypeOrmRepository],
+    },
+    {
+      provide: GetOneUserUseCase,
+      useFactory: (userRepository: IUserRepository) => {
+        return new GetOneUserUseCase(userRepository);
       },
       inject: [UserTypeOrmRepository],
     },

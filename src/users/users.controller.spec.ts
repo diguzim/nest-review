@@ -1,7 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { CreateUserUseCase } from '../@core/application/user/create-user.use-case';
+import {
+  CreateUserUseCase,
+  GetAllUsersUseCase,
+  GetOneUserUseCase,
+} from '../@core/application/user';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -16,6 +20,14 @@ describe('UsersController', () => {
         },
         {
           provide: CreateUserUseCase,
+          useValue: {},
+        },
+        {
+          provide: GetAllUsersUseCase,
+          useValue: {},
+        },
+        {
+          provide: GetOneUserUseCase,
           useValue: {},
         },
       ],
