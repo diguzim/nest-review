@@ -16,4 +16,8 @@ export class UserTypeOrmRepository implements IUserRepository {
   async findOne(id: number): Promise<User | null> {
     return await this.ormRepository.findOneBy({ id: id });
   }
+
+  async update(user: User): Promise<void> {
+    await this.ormRepository.update(user.id as number, user);
+  }
 }
