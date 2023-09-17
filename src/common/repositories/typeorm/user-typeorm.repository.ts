@@ -12,4 +12,8 @@ export class UserTypeOrmRepository implements IUserRepository {
   async findAll(): Promise<User[]> {
     return await this.ormRepository.find();
   }
+
+  async findOne(id: number): Promise<User | null> {
+    return await this.ormRepository.findOneBy({ id: id });
+  }
 }
