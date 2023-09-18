@@ -16,19 +16,20 @@ export class UpdateUserUseCase {
   ) {}
 
   async execute(input: UpdateUserInput) {
-    const user = await this.buildUserEntity(input);
+    const user = await this.userRepository.findOne(input.id);
+
+    if (!user) {
+      return null;
+    }
+
+    this.updateUserEntity(user, input);
     await this.userRepository.update(user);
     return user;
   }
 
-  private async buildUserEntity(input: UpdateUserInput) {
-    const user = User.create({
-      id: input.id,
-      name: input.name,
-      email: input.email,
-      password_hash: await this.cryptService.hash(input.password),
-    });
-
-    return user;
+  private async updateUserEntity(user: User, input: UpdateUserInput) {
+    user.name = input.name;
+    user.email = input.email;
+    user.password_hash = await this.cryptService.hash(input.password);
   }
 }
