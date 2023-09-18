@@ -3,7 +3,10 @@ import { ItemsService } from './items.service';
 import { Repository } from 'typeorm';
 import { Item } from './item.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { mockedItem, mockedUser } from '../common/test/mocked-entities';
+import {
+  mockedItem__OLD,
+  mockedUser__OLD,
+} from '../common/test/mocked-entities';
 import { generateMockedRepository } from '../common/test/mocked-providers';
 
 describe('ItemsService', () => {
@@ -33,17 +36,17 @@ describe('ItemsService', () => {
   });
 
   describe('create', () => {
-    const createItemDto = { name: mockedItem.name, user: mockedUser };
+    const createItemDto = { name: mockedItem__OLD.name, user: mockedUser__OLD };
 
     it('should save a item using the item repository', async () => {
-      await service.create(createItemDto, mockedUser);
+      await service.create(createItemDto, mockedUser__OLD);
 
       expect(itemRepository.save).toHaveBeenCalledWith(createItemDto);
     });
   });
 
   describe('findAll', () => {
-    const mockedItems = [mockedItem];
+    const mockedItems = [mockedItem__OLD];
 
     it('should return an array of items using the item repository', async () => {
       jest.spyOn(itemRepository, 'find').mockResolvedValue(mockedItems);
@@ -58,14 +61,16 @@ describe('ItemsService', () => {
 
   describe('findOne', () => {
     it('should return a item using the item repository', async () => {
-      jest.spyOn(itemRepository, 'findOneBy').mockResolvedValue(mockedItem);
+      jest
+        .spyOn(itemRepository, 'findOneBy')
+        .mockResolvedValue(mockedItem__OLD);
 
-      const item = await service.findOne(mockedItem.id);
+      const item = await service.findOne(mockedItem__OLD.id);
 
-      expect(item).toEqual(mockedItem);
+      expect(item).toEqual(mockedItem__OLD);
 
       expect(itemRepository.findOneBy).toHaveBeenCalledWith({
-        id: mockedItem.id,
+        id: mockedItem__OLD.id,
       });
     });
   });
@@ -77,16 +82,18 @@ describe('ItemsService', () => {
 
     describe('when the item exists', () => {
       it('should update the item using the item repository', async () => {
-        jest.spyOn(itemRepository, 'findOneBy').mockResolvedValue(mockedItem);
+        jest
+          .spyOn(itemRepository, 'findOneBy')
+          .mockResolvedValue(mockedItem__OLD);
 
-        await service.update(mockedItem.id, updateItemDto);
+        await service.update(mockedItem__OLD.id, updateItemDto);
 
         expect(itemRepository.findOneBy).toHaveBeenCalledWith({
-          id: mockedItem.id,
+          id: mockedItem__OLD.id,
         });
 
         expect(itemRepository.save).toHaveBeenCalledWith({
-          ...mockedItem,
+          ...mockedItem__OLD,
           ...updateItemDto,
         });
       });
@@ -96,11 +103,11 @@ describe('ItemsService', () => {
       it('should return null', async () => {
         jest.spyOn(itemRepository, 'findOneBy').mockResolvedValue(null);
 
-        const item = await service.update(mockedItem.id, updateItemDto);
+        const item = await service.update(mockedItem__OLD.id, updateItemDto);
 
         expect(item).toEqual(null);
         expect(itemRepository.findOneBy).toHaveBeenCalledWith({
-          id: mockedItem.id,
+          id: mockedItem__OLD.id,
         });
       });
     });
@@ -108,11 +115,13 @@ describe('ItemsService', () => {
 
   describe('delete', () => {
     it('should delete item using the item repository', async () => {
-      jest.spyOn(itemRepository, 'findOneBy').mockResolvedValue(mockedItem);
+      jest
+        .spyOn(itemRepository, 'findOneBy')
+        .mockResolvedValue(mockedItem__OLD);
 
-      await service.delete(mockedItem.id);
+      await service.delete(mockedItem__OLD.id);
 
-      expect(itemRepository.delete).toHaveBeenCalledWith(mockedItem.id);
+      expect(itemRepository.delete).toHaveBeenCalledWith(mockedItem__OLD.id);
     });
   });
 });

@@ -11,9 +11,9 @@ import { Drop } from './drop.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { generateMockedRepository } from '../common/test/mocked-providers';
 import {
-  mockedCreature,
+  mockedCreature__OLD,
   mockedDrop,
-  mockedItem,
+  mockedItem__OLD,
 } from '../common/test/mocked-entities';
 
 describe('DropsService', () => {
@@ -59,8 +59,8 @@ describe('DropsService', () => {
 
   describe('create', () => {
     const createDropDto = {
-      creatureId: mockedCreature.id,
-      itemId: mockedItem.id,
+      creatureId: mockedCreature__OLD.id,
+      itemId: mockedItem__OLD.id,
       dropRate: 0.5,
       minDrops: 1,
       maxDrops: 2,
@@ -80,7 +80,7 @@ describe('DropsService', () => {
       it('should return an instance of ItemNotFoundError', async () => {
         jest
           .spyOn(creaturesRepository, 'findOneBy')
-          .mockResolvedValue(mockedCreature);
+          .mockResolvedValue(mockedCreature__OLD);
         jest.spyOn(itemsRepository, 'findOneBy').mockResolvedValue(null);
 
         const result = await service.create(createDropDto);
@@ -93,16 +93,18 @@ describe('DropsService', () => {
       beforeEach(() => {
         jest
           .spyOn(creaturesRepository, 'findOneBy')
-          .mockResolvedValue(mockedCreature);
-        jest.spyOn(itemsRepository, 'findOneBy').mockResolvedValue(mockedItem);
+          .mockResolvedValue(mockedCreature__OLD);
+        jest
+          .spyOn(itemsRepository, 'findOneBy')
+          .mockResolvedValue(mockedItem__OLD);
       });
 
       it('should save a drop using the drop repository', async () => {
         await service.create(createDropDto);
 
         expect(dropsRepository.save).toHaveBeenCalledWith({
-          creature: mockedCreature,
-          item: mockedItem,
+          creature: mockedCreature__OLD,
+          item: mockedItem__OLD,
           dropRate: createDropDto.dropRate,
           minDrops: createDropDto.minDrops,
           maxDrops: createDropDto.maxDrops,
@@ -127,8 +129,8 @@ describe('DropsService', () => {
 
   describe('update', () => {
     const updateDropDto = {
-      creatureId: mockedCreature.id,
-      itemId: mockedItem.id,
+      creatureId: mockedCreature__OLD.id,
+      itemId: mockedItem__OLD.id,
       dropRate: 0.5,
       minDrops: 1,
       maxDrops: 2,
@@ -148,7 +150,7 @@ describe('DropsService', () => {
       it('should return an instance of ItemNotFoundError', async () => {
         jest
           .spyOn(creaturesRepository, 'findOneBy')
-          .mockResolvedValue(mockedCreature);
+          .mockResolvedValue(mockedCreature__OLD);
         jest.spyOn(itemsRepository, 'findOneBy').mockResolvedValue(null);
 
         const result = await service.update(mockedDrop.id, updateDropDto);
@@ -161,8 +163,10 @@ describe('DropsService', () => {
       beforeEach(() => {
         jest
           .spyOn(creaturesRepository, 'findOneBy')
-          .mockResolvedValue(mockedCreature);
-        jest.spyOn(itemsRepository, 'findOneBy').mockResolvedValue(mockedItem);
+          .mockResolvedValue(mockedCreature__OLD);
+        jest
+          .spyOn(itemsRepository, 'findOneBy')
+          .mockResolvedValue(mockedItem__OLD);
       });
 
       describe('when the drop does not exist', () => {
@@ -185,8 +189,8 @@ describe('DropsService', () => {
 
           expect(dropsRepository.save).toHaveBeenCalledWith({
             id: mockedDrop.id,
-            creature: mockedCreature,
-            item: mockedItem,
+            creature: mockedCreature__OLD,
+            item: mockedItem__OLD,
             dropRate: updateDropDto.dropRate,
             minDrops: updateDropDto.minDrops,
             maxDrops: updateDropDto.maxDrops,

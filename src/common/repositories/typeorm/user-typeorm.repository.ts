@@ -17,6 +17,10 @@ export class UserTypeOrmRepository implements IUserRepository {
     return await this.ormRepository.findOneBy({ id: id });
   }
 
+  async findOneBy(params: Partial<User>): Promise<User | null> {
+    return await this.ormRepository.findOneBy(params);
+  }
+
   async update(user: User): Promise<void> {
     await this.ormRepository.update(user.id as number, user);
   }

@@ -3,7 +3,10 @@ import { CreaturesService } from './creatures.service';
 import { Repository } from 'typeorm';
 import { Creature } from './creature.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { mockedCreature, mockedUser } from '../common/test/mocked-entities';
+import {
+  mockedCreature__OLD,
+  mockedUser__OLD,
+} from '../common/test/mocked-entities';
 import { generateMockedRepository } from '../common/test/mocked-providers';
 
 describe('CreaturesService', () => {
@@ -35,17 +38,20 @@ describe('CreaturesService', () => {
   });
 
   describe('create', () => {
-    const createCreatureDto = { name: mockedCreature.name, user: mockedUser };
+    const createCreatureDto = {
+      name: mockedCreature__OLD.name,
+      user: mockedUser__OLD,
+    };
 
     it('should save a creature using the creature repository', async () => {
-      await service.create(createCreatureDto, mockedUser);
+      await service.create(createCreatureDto, mockedUser__OLD);
 
       expect(creatureRepository.save).toHaveBeenCalledWith(createCreatureDto);
     });
   });
 
   describe('findAll', () => {
-    const mockedCreatures = [mockedCreature];
+    const mockedCreatures = [mockedCreature__OLD];
     describe('without params', () => {
       it('should return an array of creatures using the creature repository', async () => {
         jest
@@ -62,7 +68,7 @@ describe('CreaturesService', () => {
 
     describe('without params', () => {
       it('should return an array of creatures using the creature repository', async () => {
-        const params = { userId: mockedUser.id };
+        const params = { userId: mockedUser__OLD.id };
         jest
           .spyOn(creatureRepository, 'find')
           .mockResolvedValue(mockedCreatures);
@@ -80,14 +86,14 @@ describe('CreaturesService', () => {
     it('should return a creature using the creature repository', async () => {
       jest
         .spyOn(creatureRepository, 'findOneBy')
-        .mockResolvedValue(mockedCreature);
+        .mockResolvedValue(mockedCreature__OLD);
 
-      const creature = await service.findOne(mockedCreature.id);
+      const creature = await service.findOne(mockedCreature__OLD.id);
 
-      expect(creature).toEqual(mockedCreature);
+      expect(creature).toEqual(mockedCreature__OLD);
 
       expect(creatureRepository.findOneBy).toHaveBeenCalledWith({
-        id: mockedCreature.id,
+        id: mockedCreature__OLD.id,
       });
     });
   });
@@ -101,16 +107,16 @@ describe('CreaturesService', () => {
       it('should update the creature using the creature repository', async () => {
         jest
           .spyOn(creatureRepository, 'findOneBy')
-          .mockResolvedValue(mockedCreature);
+          .mockResolvedValue(mockedCreature__OLD);
 
-        await service.update(mockedCreature.id, updateCreatureDto);
+        await service.update(mockedCreature__OLD.id, updateCreatureDto);
 
         expect(creatureRepository.findOneBy).toHaveBeenCalledWith({
-          id: mockedCreature.id,
+          id: mockedCreature__OLD.id,
         });
 
         expect(creatureRepository.save).toHaveBeenCalledWith({
-          ...mockedCreature,
+          ...mockedCreature__OLD,
           ...updateCreatureDto,
         });
       });
@@ -121,13 +127,13 @@ describe('CreaturesService', () => {
         jest.spyOn(creatureRepository, 'findOneBy').mockResolvedValue(null);
 
         const creature = await service.update(
-          mockedCreature.id,
+          mockedCreature__OLD.id,
           updateCreatureDto,
         );
 
         expect(creature).toEqual(null);
         expect(creatureRepository.findOneBy).toHaveBeenCalledWith({
-          id: mockedCreature.id,
+          id: mockedCreature__OLD.id,
         });
       });
     });
@@ -137,11 +143,13 @@ describe('CreaturesService', () => {
     it('should delete creature using the creature repository', async () => {
       jest
         .spyOn(creatureRepository, 'findOneBy')
-        .mockResolvedValue(mockedCreature);
+        .mockResolvedValue(mockedCreature__OLD);
 
-      await service.delete(mockedCreature.id);
+      await service.delete(mockedCreature__OLD.id);
 
-      expect(creatureRepository.delete).toHaveBeenCalledWith(mockedCreature.id);
+      expect(creatureRepository.delete).toHaveBeenCalledWith(
+        mockedCreature__OLD.id,
+      );
     });
   });
 });

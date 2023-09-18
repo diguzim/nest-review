@@ -4,5 +4,6 @@ export const mockedUserRepository: IUserRepository = {
   insert: jest.fn(),
   findAll: jest.fn(),
   findOne: jest.fn(),
+  findOneBy: jest.fn(),
   update: jest.fn(),
 };

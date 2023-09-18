@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
 import { Reflector } from '@nestjs/core';
 import { UnauthorizedException } from '@nestjs/common';
-import { mockedUser } from '../common/test/mocked-entities';
+import { mockedUser__OLD } from '../common/test/mocked-entities';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 describe('AuthGuard', () => {
@@ -197,7 +197,9 @@ describe('AuthGuard', () => {
           jest.spyOn(jwt_service, 'verifyAsync').mockResolvedValue({
             sub: 'some_user_id',
           });
-          jest.spyOn(users_service, 'findOne').mockResolvedValue(mockedUser);
+          jest
+            .spyOn(users_service, 'findOne')
+            .mockResolvedValue(mockedUser__OLD);
 
           expect(await guard.canActivate(context as any)).toBe(true);
         });

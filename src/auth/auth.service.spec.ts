@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
-import { mockedUser } from '../common/test/mocked-entities';
+import { mockedUser__OLD } from '../common/test/mocked-entities';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -64,7 +64,7 @@ describe('AuthService', () => {
 
     describe('when user with email is found', () => {
       beforeEach(() => {
-        jest.spyOn(userService, 'findOneBy').mockResolvedValue(mockedUser);
+        jest.spyOn(userService, 'findOneBy').mockResolvedValue(mockedUser__OLD);
       });
 
       describe('and the password is incorrect', () => {
