@@ -1,12 +1,12 @@
 import { mockedUserRepository } from '../../../common/test/repositories/mocked-user.repository';
+import { mockedCryptService } from '../../../common/test/services';
 import { IUserRepository } from '../../domain/user/user.repository';
-import { ICryptService } from '../../services';
 import { UpdateUserUseCase } from './update-user.use-case';
 
 describe('UpdateUserUseCase', () => {
   let updateUserUseCase: UpdateUserUseCase;
   let userRepository: IUserRepository;
-  let cryptService: ICryptService;
+  const cryptService = mockedCryptService;
 
   const input = {
     id: 1,
@@ -15,10 +15,8 @@ describe('UpdateUserUseCase', () => {
     password: 'password',
   };
 
-  beforeEach(() => {
-    cryptService = {
-      hash: jest.fn((password) => Promise.resolve(`${password}_hash`)),
-    };
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   describe('when an user exists', () => {

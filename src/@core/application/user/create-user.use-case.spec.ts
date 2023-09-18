@@ -1,22 +1,17 @@
 import { mockedUserRepository } from '../../../common/test/repositories/mocked-user.repository';
-import { ICryptService } from '../../services';
-import { IEmailService } from '../../services/email.service';
+import {
+  mockedCryptService,
+  mockedEmailService,
+} from '../../../common/test/services';
 import { CreateUserUseCase } from './create-user.use-case';
 
 describe('CreateUserUseCase', () => {
   let createUserUseCase: CreateUserUseCase;
   const userRepository = mockedUserRepository;
-  let emailNotification: IEmailService;
-  let cryptService: ICryptService;
+  const emailNotification = mockedEmailService;
+  const cryptService = mockedCryptService;
 
   beforeEach(() => {
-    emailNotification = {
-      sendEmail: jest.fn(),
-    };
-    cryptService = {
-      hash: jest.fn((password) => Promise.resolve(`${password}_hash`)),
-    };
-
     createUserUseCase = new CreateUserUseCase(
       userRepository,
       emailNotification,

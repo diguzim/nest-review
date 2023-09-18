@@ -9,4 +9,10 @@ export class BCryptService implements ICryptService {
 
     return hash;
   }
+
+  async compare(plaintext: string, hash: string): Promise<boolean> {
+    const isMatch = await bcrypt.compare(plaintext, hash);
+
+    return isMatch;
+  }
 }
