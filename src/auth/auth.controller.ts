@@ -8,24 +8,25 @@ import {
   Request,
   NotFoundException,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { SignInDto } from './dto';
 import { Public } from '../decorators';
-import { User__OLD } from '../users/user.entity';
+import { AuthenticateUserUseCase } from '../@core/application/auth/authenticate-user.use-case';
+import { User } from '../@core/domain/user/user.entity';
+import { UserSerializer } from '../common/serializers/user.serializer';
 
 export interface AuthenticatedRequest extends Request {
-  user: User__OLD;
+  user: User;
 }
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authenticateUserUseCase: AuthenticateUserUseCase) {}
 
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: SignInDto) {
-    const result = this.authService.signIn(signInDto.email, signInDto.password);
+  async signIn(@Body() signInDto: SignInDto) {
+    const result = await this.authenticateUserUseCase.execute(signInDto);
 
     if (!result) {
       throw new NotFoundException();
@@ -36,6 +37,6 @@ export class AuthController {
 
   @Get('profile')
   getProfile(@Request() req: AuthenticatedRequest) {
-    return req.user;
+    return UserSerializer.serialize(req.user);
   }
 }

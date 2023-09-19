@@ -23,7 +23,7 @@ export class ItemsController {
     @Body() createItemDto: CreateItemDto,
     @Request() req: AuthenticatedRequest,
   ) {
-    return this.itemsService.create(createItemDto, req.user);
+    return this.itemsService.create(createItemDto, req.user as any); // TODO this is just to work around, as this is expecting User__OLD
   }
 
   @Get()

@@ -9,8 +9,8 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../decorators';
-import { UsersService } from '../users/users.service';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { IUserRepository } from '../@core/domain/user/user.repository';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     private jwtService: JwtService,
     private reflector: Reflector,
     private configService: ConfigService,
-    private userService: UsersService,
+    private userRepository: IUserRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -45,7 +45,7 @@ export class AuthGuard implements CanActivate {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      const user = await this.userService.findOne(payload.sub);
+      const user = await this.userRepository.findOne(payload.sub);
       request['user'] = user;
     } catch {
       throw new UnauthorizedException();

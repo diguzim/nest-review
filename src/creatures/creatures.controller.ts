@@ -24,7 +24,7 @@ export class CreaturesController {
     @Body() createCreatureDto: CreateCreatureDto,
     @Request() req: AuthenticatedRequest,
   ) {
-    return this.creaturesService.create(createCreatureDto, req.user);
+    return this.creaturesService.create(createCreatureDto, req.user as any); // TODO this is just to work around, as this is expecting User__OLD
   }
 
   @Get()
