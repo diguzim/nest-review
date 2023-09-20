@@ -22,6 +22,10 @@ export class UserTypeOrmRepository implements IUserRepository {
   }
 
   async update(user: User): Promise<void> {
-    await this.ormRepository.update(user.id as number, user);
+    await this.ormRepository.update(user.id as number, {
+      name: user.name,
+      email: user.email,
+      password_hash: user.password_hash,
+    });
   }
 }

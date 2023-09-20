@@ -5,6 +5,7 @@ import {
   CreateUserUseCase,
   GetAllUsersUseCase,
   GetOneUserUseCase,
+  UpdateUserUseCase,
 } from '../@core/application/user';
 
 describe('UsersController', () => {
@@ -28,6 +29,10 @@ describe('UsersController', () => {
         },
         {
           provide: GetOneUserUseCase,
+          useValue: {},
+        },
+        {
+          provide: UpdateUserUseCase,
           useValue: {},
         },
       ],

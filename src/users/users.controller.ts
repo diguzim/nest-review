@@ -16,6 +16,7 @@ import {
   CreateUserUseCase,
   GetAllUsersUseCase,
   GetOneUserUseCase,
+  UpdateUserUseCase,
 } from '../@core/application/user';
 import {
   UserSerialized,
@@ -29,6 +30,7 @@ export class UsersController {
     private createUserUseCase: CreateUserUseCase,
     private getAllUsersUseCase: GetAllUsersUseCase,
     private getOneUserUseCase: GetOneUserUseCase,
+    private updateUserUseCase: UpdateUserUseCase,
   ) {}
 
   @Post()
@@ -62,13 +64,16 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    const user = await this.usersService.update(id, updateUserDto);
+    const user = await this.updateUserUseCase.execute({
+      id: id,
+      ...updateUserDto,
+    });
 
     if (!user) {
       throw new NotFoundException();
     }
 
-    return user;
+    return UserSerializer.serialize(user);
   }
 
   @Delete(':id')

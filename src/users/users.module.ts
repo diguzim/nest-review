@@ -1,4 +1,4 @@
-import { Get, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
@@ -15,6 +15,7 @@ import { EmailService } from '../common/services/email.service';
 import {
   GetAllUsersUseCase,
   GetOneUserUseCase,
+  UpdateUserUseCase,
 } from '../@core/application/user';
 
 @Module({
@@ -50,6 +51,16 @@ import {
         return new GetOneUserUseCase(userRepository);
       },
       inject: [UserTypeOrmRepository],
+    },
+    {
+      provide: UpdateUserUseCase,
+      useFactory: (
+        userRepository: IUserRepository,
+        cryptService: ICryptService,
+      ) => {
+        return new UpdateUserUseCase(userRepository, cryptService);
+      },
+      inject: [UserTypeOrmRepository, BCryptService],
     },
     {
       provide: UserTypeOrmRepository,
