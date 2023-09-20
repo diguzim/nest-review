@@ -2,25 +2,48 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthGuard } from './auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '../users/users.service';
-import { Reflector } from '@nestjs/core';
+import { APP_GUARD, Reflector } from '@nestjs/core';
 import { UnauthorizedException } from '@nestjs/common';
-import { mockedUser__OLD } from '../common/test/mocked-entities';
+import { mockedUser } from '../common/test/mocked-entities';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { UserTypeOrmRepository } from '../common/repositories/typeorm/user-typeorm.repository';
+import { IUserRepository } from '../@core/domain/user/user.repository';
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;
-  let jwt_service: JwtService;
-  let users_service: UsersService;
+  let jwtService: JwtService;
+  let userRepository: IUserRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AuthGuard,
+        {
+          provide: AuthGuard,
+          useFactory: (
+            jwtService: JwtService,
+            reflector: Reflector,
+            configService: ConfigService,
+            userRepository: IUserRepository,
+          ) => {
+            return new AuthGuard(
+              jwtService,
+              reflector,
+              configService,
+              userRepository,
+            );
+          },
+          inject: [JwtService, Reflector, ConfigService, UserTypeOrmRepository],
+        },
         {
           provide: JwtService,
           useValue: {
             verifyAsync: jest.fn(),
+          },
+        },
+        {
+          provide: Reflector,
+          useValue: {
+            getAllAndOverride: jest.fn(),
           },
         },
         {
@@ -30,23 +53,17 @@ describe('AuthGuard', () => {
           },
         },
         {
-          provide: UsersService,
+          provide: UserTypeOrmRepository,
           useValue: {
             findOne: jest.fn(),
-          },
-        },
-        {
-          provide: Reflector,
-          useValue: {
-            getAllAndOverride: jest.fn(),
           },
         },
       ],
     }).compile();
 
     guard = module.get<AuthGuard>(AuthGuard);
-    jwt_service = module.get<JwtService>(JwtService);
-    users_service = module.get<UsersService>(UsersService);
+    jwtService = module.get<JwtService>(JwtService);
+    userRepository = module.get<UserTypeOrmRepository>(UserTypeOrmRepository);
   });
 
   it('should be defined', () => {
@@ -194,12 +211,10 @@ describe('AuthGuard', () => {
         };
 
         it('should return true', async () => {
-          jest.spyOn(jwt_service, 'verifyAsync').mockResolvedValue({
+          jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue({
             sub: 'some_user_id',
           });
-          jest
-            .spyOn(users_service, 'findOne')
-            .mockResolvedValue(mockedUser__OLD);
+          jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockedUser);
 
           expect(await guard.canActivate(context as any)).toBe(true);
         });
