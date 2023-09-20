@@ -28,4 +28,8 @@ export class UserTypeOrmRepository implements IUserRepository {
       password_hash: user.password_hash,
     });
   }
+
+  async delete(id: number): Promise<void> {
+    await this.ormRepository.delete(id);
+  }
 }

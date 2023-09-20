@@ -14,6 +14,7 @@ import { CreateUserDto, UpdateUserDto } from './dto';
 import { Public } from '../decorators';
 import {
   CreateUserUseCase,
+  DeleteUserUseCase,
   GetAllUsersUseCase,
   GetOneUserUseCase,
   UpdateUserUseCase,
@@ -31,6 +32,7 @@ export class UsersController {
     private getAllUsersUseCase: GetAllUsersUseCase,
     private getOneUserUseCase: GetOneUserUseCase,
     private updateUserUseCase: UpdateUserUseCase,
+    private deleteUserUseCase: DeleteUserUseCase,
   ) {}
 
   @Post()
@@ -78,12 +80,12 @@ export class UsersController {
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const deleted = await this.usersService.delete(id);
+    const user = await this.deleteUserUseCase.execute(id);
 
-    if (deleted.affected === 0) {
+    if (!user) {
       throw new NotFoundException();
     }
 
-    return 'Successfully deleted';
+    return UserSerializer.serialize(user);
   }
 }

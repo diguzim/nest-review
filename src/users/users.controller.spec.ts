@@ -3,6 +3,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import {
   CreateUserUseCase,
+  DeleteUserUseCase,
   GetAllUsersUseCase,
   GetOneUserUseCase,
   UpdateUserUseCase,
@@ -33,6 +34,10 @@ describe('UsersController', () => {
         },
         {
           provide: UpdateUserUseCase,
+          useValue: {},
+        },
+        {
+          provide: DeleteUserUseCase,
           useValue: {},
         },
       ],

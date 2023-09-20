@@ -13,6 +13,7 @@ import { User } from '../@core/domain/user/user.entity';
 import { BCryptService } from '../common/services/b-crypt.service';
 import { EmailService } from '../common/services/email.service';
 import {
+  DeleteUserUseCase,
   GetAllUsersUseCase,
   GetOneUserUseCase,
   UpdateUserUseCase,
@@ -61,6 +62,13 @@ import {
         return new UpdateUserUseCase(userRepository, cryptService);
       },
       inject: [UserTypeOrmRepository, BCryptService],
+    },
+    {
+      provide: DeleteUserUseCase,
+      useFactory: (userRepository: IUserRepository) => {
+        return new DeleteUserUseCase(userRepository);
+      },
+      inject: [UserTypeOrmRepository],
     },
     {
       provide: UserTypeOrmRepository,
