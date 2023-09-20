@@ -9,7 +9,6 @@ import {
   Post,
   Patch,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Public } from '../decorators';
 import {
@@ -27,7 +26,6 @@ import {
 @Controller('users')
 export class UsersController {
   constructor(
-    private readonly usersService: UsersService,
     private createUserUseCase: CreateUserUseCase,
     private getAllUsersUseCase: GetAllUsersUseCase,
     private getOneUserUseCase: GetOneUserUseCase,
