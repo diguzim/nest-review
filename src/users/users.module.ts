@@ -21,7 +21,7 @@ import {
 
 @Module({
   imports: [TypeOrmModule.forFeature([User__OLD]), MicroservicesClientModule],
-  exports: [TypeOrmModule, UsersService],
+  exports: [UsersService],
   providers: [
     UsersService,
     {
